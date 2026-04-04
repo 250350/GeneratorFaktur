@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Generator Faktur</title>
+</head>
+<body>
+<div class="invoice-wrapper" id="print-area">
+    <div class="invoice">
+        <div class="invoice-container">
+            <div class="invoice-head">
+                <div class="invoice-head-top">
+                    <div class="invoice-head-top-left text-start">
+                        <img src="" alt=""/>
+                    </div>
+                    <div class="invoice-head-top-right text-end">
+                        <h3>Faktura VAT</h3>
+                    </div>
+                </div>
+                <div class="hr"></div>
+                <div class="invoice-head-middle">
+                    <div class="invoice-head-middle-left text-start">
+                        <p><span class="text-bold">Data</span>: 31/03/2026</p>
+                    </div>
+                    <div class="invoice-head-middle-right text-end">
+                        <p><span class="text-bold">Faktura nr</span>: 777</p>
+                    </div>
+                </div>
+                <div class="hr"></div>
+                <div class="invoice-head-bottom">
+                    <div class="invoice-head-bottom-left">
+                        <ul>
+                            <li class="text-bold">Sprzedawca:</li>
+                            <li>PiEngineer Przemysław Piechota</li>
+                            <li>ul. Niciarniana 45</li>
+                            <li>92-320 Łódź</li>
+                            <li>NIP: 726-108-80-84</li>
+                        </ul>
+                    </div>
+                    <div class="invoice-head-bottom-right">
+                        <ul class="text-end">
+                            <li class="text-bold">Nabywca:</li>
+                            <li><span th:text="${companyName}"></span></li>
+                            <li><span th:text="${address}"></span></li>
+                            <li><span th:text="${postalCodeAndCity}"></span></li>
+                            <li>NIP: <span th:text="${nip}"></span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="invoice-head-bottom-right text-end">
+                <p class="text-small"><span class="text-small">Data wykonania usługi lub dostawy towaru:</span> 31/03/2026</p>
+                <p class="text-small"><span class="text-small">Zamówienie z dnia:</span> 31/03/2026 nr 12345-24-01-18</p>
+            </div>
+            <div class="overflow-view">
+                <div class="invoice-body">
+                    <table>
+                        <thead>
+                        <tr>
+                            <td class="text-bold">Lp.</td>
+                            <td class="text-bold">Projekt</td>
+                            <td class="text-bold">Ilość</td>
+                            <td class="text-bold">Cena netto</td>
+                            <td class="text-bold">Wartość netto</td>
+                            <td class="text-bold">Stawka VAT</td>
+                            <td class="text-bold">Wartość VAT</td>
+                            <td class="text-bold">Wartość brutto</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><span th:text="${description}"></span></td>
+                            <td><span th:text="${amount}"></span></td>
+                            <td><span th:text="${netPrice}"></span></td>
+                            <td><span th:text="${netPrice}"></span></td>
+                            <td><span th:text="${stawkaVAT}"></span></td>
+                            <td><span th:text="${vatValue}"></span></td>
+                            <td><span th:text="${grossPrice}"></span></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-bold">Suma:</td>
+                            <td class="text-bold"><span th:text="${netPrice}"></span></td>
+                            <td></td>
+                            <td class="text-bold"><span th:text="${vatValue}"></span></td>
+                            <td class="text-bold text-start"><span th:text="${grossPrice}"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="invoice-foot text-center">
+                <p><span class="text-bold text-center">NOTE:&nbsp;</span>
+                    Ten rachunek został wygenerowany przez komputer
+                    przez co fizyczny podpis nie jest wymagany.</p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
