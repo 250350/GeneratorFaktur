@@ -1,15 +1,18 @@
 package pl.comp.generatorfaktur.controller;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import pl.comp.generatorfaktur.entities.InvoiceRequest;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.InputStream;
@@ -26,6 +29,7 @@ public class HomeController {
     private double vat;
     private double vatValue;
     private double grossPrice;
+    private double netPrice;
 
     public HomeController(TemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
@@ -38,42 +42,58 @@ public class HomeController {
 
     @RequestMapping("/show-invoice")
     public String showInvoice(
-            @RequestParam String companyName,
-            @RequestParam String address,
-            @RequestParam String postalCodeAndCity,
-            @RequestParam String nip,
-            @RequestParam String description,
-            @RequestParam int amount,
-            @RequestParam double netPrice,
-            @RequestParam String stawkaVAT,
+//            @RequestParam String companyName,
+//            @RequestParam String address,
+//            @RequestParam String postalCodeAndCity,
+//            @RequestParam String nip,
+//            @RequestParam String description,
+//            @RequestParam int amount,
+//            @RequestParam double netPrice,
+//            @RequestParam String stawkaVAT,
+            @Valid @ModelAttribute InvoiceRequest invoiceRequest,
+            BindingResult result,
             HttpSession session,
             Model model
 
     ) {
-        setVAT(stawkaVAT);
-        setVatValue(calculateValueVAT(netPrice));
-        setGrossPrice(calculateGrossPrice(netPrice));
-        session.setAttribute("companyName", companyName);
-        session.setAttribute("address", address);
-        session.setAttribute("postalCodeAndCity", postalCodeAndCity);
-        session.setAttribute("nip", nip);
-        session.setAttribute("description", description);
-        session.setAttribute("amount", amount);
-        session.setAttribute("netPrice", netPrice);
-        session.setAttribute("stawkaVAT", stawkaVAT);
+    //        String nip = invoiceRequest.getNip();
+    //        String cleanNip = invoiceRequest.getNip().replaceAll("[^0-9]", "");
+    //        invoiceRequest.setNip(cleanNip);
+        setVAT(invoiceRequest.getStawkaVAT());
+        double netPriceForOne = invoiceRequest.getNetPrice();
+        netPrice = invoiceRequest.getNetPrice();
+        setNetPrice(calculateNetPrice(netPrice, invoiceRequest.getAmount()));
+        invoiceRequest.setNetPrice(netPrice);
+        setVatValue(calculateValueVAT(invoiceRequest.getNetPrice()));
+        setGrossPrice(calculateGrossPrice(invoiceRequest.getNetPrice()));
+        session.setAttribute("companyName", invoiceRequest.getCompanyName());
+        session.setAttribute("address", invoiceRequest.getAddress());
+        session.setAttribute("postalCodeAndCity", invoiceRequest.getPostalCodeAndCity());
+        session.setAttribute("nip", invoiceRequest.getNip());
+        session.setAttribute("description", invoiceRequest.getDescription());
+        session.setAttribute("amount", invoiceRequest.getAmount());
+        session.setAttribute("netPriceForOne", netPriceForOne);
+        session.setAttribute("netPrice", invoiceRequest.getNetPrice());
+        session.setAttribute("stawkaVAT", invoiceRequest.getStawkaVAT());
         session.setAttribute("vatValue", vatValue);
         session.setAttribute("grossPrice", grossPrice);
 
-        model.addAttribute("companyName", companyName);
-        model.addAttribute("address", address);
-        model.addAttribute("postalCodeAndCity", postalCodeAndCity);
-        model.addAttribute("nip", nip);
-        model.addAttribute("description", description);
-        model.addAttribute("amount", amount);
-        model.addAttribute("netPrice", netPrice);
-        model.addAttribute("stawkaVAT", stawkaVAT);
+        model.addAttribute("companyName", invoiceRequest.getCompanyName());
+        model.addAttribute("address", invoiceRequest.getAddress());
+        model.addAttribute("postalCodeAndCity", invoiceRequest.getPostalCodeAndCity());
+        model.addAttribute("nip", invoiceRequest.getNip());
+        model.addAttribute("description", invoiceRequest.getDescription());
+        model.addAttribute("amount", invoiceRequest.getAmount());
+        model.addAttribute("netPriceForOne", netPriceForOne);
+        model.addAttribute("netPrice", invoiceRequest.getNetPrice());
+        model.addAttribute("stawkaVAT", invoiceRequest.getStawkaVAT());
         model.addAttribute("vatValue", vatValue);
         model.addAttribute("grossPrice", grossPrice);
+
+        if (result.hasErrors()) {
+            invoiceRequest.getAllFields();
+            return "index";
+        }
 
         return "webpage";
     }
@@ -88,6 +108,8 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
     String description = (String) session.getAttribute("description");
     Integer amountObj = (Integer) session.getAttribute("amount");
     int amount = amountObj != null ? amountObj : 0;
+    Double netPriceForOneObj = (Double) session.getAttribute("netPriceForOne");
+    double netPriceForOne = netPriceForOneObj != null ? netPriceForOneObj : 0.0;
     Double netPriceObj = (Double) session.getAttribute("netPrice");
     double netPrice = netPriceObj != null ? netPriceObj : 0.0;
     String stawkaVAT = (String) session.getAttribute("stawkaVAT");
@@ -99,6 +121,7 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
     context.setVariable("nip", nip);
     context.setVariable("description", description);
     context.setVariable("amount", amount);
+    context.setVariable("netPriceForOne", netPriceForOne);
     context.setVariable("netPrice", netPrice);
     context.setVariable("stawkaVAT", stawkaVAT);
     context.setVariable("vatValue", vatValue);
@@ -160,12 +183,21 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
         return netPrice * vat;
     }
 
+    private double calculateNetPrice(double netPrice, int amount) {
+        return netPrice * amount;
+    }
+
     private void setVAT(String stawkaVAT) {
         this.vat = Double.parseDouble(stawkaVAT) / 100.0;
     }
 
     public void setVatValue(double vatValue) {
         this.vatValue = Math.round(vatValue * 100.0) / 100.0;
+    }
+
+    public void setNetPrice(double netPrice) {
+        this.netPrice = Math.round(netPrice * 100.0) / 100.0;
+
     }
 
     public void setGrossPrice(double grossPrice) {

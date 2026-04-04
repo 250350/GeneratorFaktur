@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pl">
+<script src="https://unpkg.com/imask"></script>
 <head>
     <meta charset="UTF-8">
     <title>Generator Faktury</title>
@@ -100,5 +101,10 @@
         <button type="submit">Generuj fakturę</button>
     </form>
 </div>
+<script>
+    IMask(document.getElementById('nip'), {
+        mask: '000-000-00-00'
+    });
+</script>
 </body>
 </html>
