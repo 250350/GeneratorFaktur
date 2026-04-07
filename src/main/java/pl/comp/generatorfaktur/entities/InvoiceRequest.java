@@ -40,7 +40,6 @@ public class InvoiceRequest {
         System.out.println("amount: " + amount);
         System.out.println("netPrice: " + netPrice);
         System.out.println("stawkaVAT: " + stawkaVAT);
-
     }
 
 }

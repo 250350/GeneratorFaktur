@@ -42,23 +42,12 @@ public class HomeController {
 
     @RequestMapping("/show-invoice")
     public String showInvoice(
-//            @RequestParam String companyName,
-//            @RequestParam String address,
-//            @RequestParam String postalCodeAndCity,
-//            @RequestParam String nip,
-//            @RequestParam String description,
-//            @RequestParam int amount,
-//            @RequestParam double netPrice,
-//            @RequestParam String stawkaVAT,
             @Valid @ModelAttribute InvoiceRequest invoiceRequest,
             BindingResult result,
             HttpSession session,
             Model model
 
     ) {
-    //        String nip = invoiceRequest.getNip();
-    //        String cleanNip = invoiceRequest.getNip().replaceAll("[^0-9]", "");
-    //        invoiceRequest.setNip(cleanNip);
         setVAT(invoiceRequest.getStawkaVAT());
         double netPriceForOne = invoiceRequest.getNetPrice();
         netPrice = invoiceRequest.getNetPrice();
