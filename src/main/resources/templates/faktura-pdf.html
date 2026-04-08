@@ -2,7 +2,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="/styleTest.css">
   <title>Faktura</title>
 
   <style>
@@ -10,22 +9,42 @@
     body {
       font-family: "Arial", serif;
       font-size: 12pt;
-      max-width: 850px;
-      margin-right: auto;
-      margin-left: auto;
+      margin: 0;
       padding: 0;
-      min-height: 920px;
-      background: #282828;
+      background: #fff;
       color: #000;
+    }
+
+    /*@page page {*/
+    /*  size: A4;*/
+    /*  width: 210mm;*/
+    /*  min-height: 297mm;*/
+    /*  padding: 20mm;*/
+    /*  margin: 0;*/
+    /*  background: #fff;*/
+    /*}*/
+
+    /*.page {*/
+    /*  flex-direction: column;*/
+    /*  display: flex;*/
+    /*  width: 210mm;*/
+    /*  min-height: 297mm;*/
+    /*  padding: 20mm;*/
+    /*  margin: 0;*/
+    /*  position: relative;*/
+    /*  background: #fff;*/
+    /*}*/
+
+    @page {
+      size: A4;
+      margin: 0;
+      padding-top: 5mm;
     }
 
     .page {
       width: 210mm;
-      min-height: 297mm;
       padding: 20mm;
-      margin: 0 auto;
-      position: relative;
-      background: #fff;
+      box-sizing: border-box;
     }
 
     /* ===== TEXT ===== */
@@ -102,47 +121,6 @@
       text-align: center;
     }
 
-    .footer {
-      position: absolute;
-      display: flex;
-      bottom: 15px;
-      left: 20mm;
-      right: 20mm;
-
-      justify-content: space-between;
-      margin-top: 60px;
-      font-size: 9px;
-    }
-
-    .footer-col {
-      width: 23%;
-    }
-
-    .footer-col p {
-      margin: 2px 0;
-    }
-
-    .footer-col.left {
-      text-align: left;
-    }
-
-    .footer-col.center {
-      text-align: center;
-    }
-
-    .footer-col.right {
-      text-align: right;
-    }
-
-    .logo-top {
-      position: absolute;
-      text-align: left;
-      margin-left: 20mm;
-      top: 30px;
-      left: 50%;
-      transform: translateX(-295%);
-    }
-
     .logo-top img {
       max-width: 160px;
       width: 100%;
@@ -150,7 +128,8 @@
     }
 
     .page {
-      margin-top: 80px;
+      margin-top: 10px;
+      margin-bottom: 10px;
     }
 
     /* ===== LINE ===== */
@@ -167,70 +146,14 @@
     .text-middle{
       font-size: 13px;
     }
-
-    /* ===== PRINT ===== */
-    @media print{
-      .print-area{
-        visibility: visible;
-        width: 100%;
-        position: absolute;
-        left: 0;
-        top: 0;
-        overflow: hidden;
-      }
-
-      .overflow-view{
-        overflow-x: hidden;
-      }
-
-      .invoice-btns{
-        display: none;
-      }
-    }
-
-    .invoice-btns{
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
-    }
-    .invoice-btn{
-      padding: 3px 9px;
-      color: var(--dark-color);
-      font-family: inherit;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-    }
-
-    @media print{
-      .print-area{
-        visibility: visible;
-        width: 100%;
-        position: absolute;
-        left: 0;
-        top: 0;
-        overflow: hidden;
-      }
-
-      .overflow-view{
-        overflow-x: hidden;
-      }
-
-      .invoice-btns{
-        display: none;
-      }
-    }
   </style>
 
 </head>
 
 <body>
 <div class="page">
-  <div class="logo-top">
-    <img src="/navLogo.png" alt="logo">
-  </div>
   <div class="invoice">
     <!-- ===== SPRZEDAWCA / NABYWCA ===== -->
-    <div class="line"></div>
     <table class="inner-table">
       <tr>
         <td>
@@ -266,7 +189,6 @@
     <br>
     <br>
     <p class="text-middle">Zamówienie z dnia 31.01.2024 nr 92910-24-01-18</p>
-    <br>
     <p class="text-middle">Nazwa / opis prac:</p>
     <p class="text-middle"><span th:text="${description}"></span></p>
     <br>
@@ -311,7 +233,6 @@
       </tbody>
     </table>
     <br>
-    <br>
 
     <!-- ===== SUMMARY ===== -->
     <p><strong>Razem do zapłaty: <span th:text="${grossPrice}"></span></strong></p>
@@ -321,13 +242,10 @@
     <p>Słownie: sześćset siedemdziesiąt złoty i 35 groszy</p>
 
     <br>
-    <br>
-    <p>
+    <p class="text-small">
       Płatność – przelew bankowy na konto nr PL 25 1140 2004 0000 3202 7584 2595
       w mBank S.A., SWIFT: BREXPLPWMBK, w terminie do 15.02.2024.
     </p>
-    <br>
-    <br>
 
     <!-- ===== SIGNATURES ===== -->
     <table class="signature-table">
@@ -343,54 +261,7 @@
         </td>
       </tr>
     </table>
-
-    <div class="text-center">
-      <div class="invoice-btns">
-        <button type="button"
-                class="invoice-btn"
-                onclick="printInvoice()">
-          <span><i class="fa-solid fa-print"></i></span>
-          <span>Drukuj</span>
-        </button>
-        <form action="/generate-invoice" method="get">
-          <button type="submit"
-                  class="invoice-btn">
-            <span><i class="fa-solid"></i></span>
-            <span>Pobierz</span>
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <div class="footer">
-      <div class="footer-col left">
-        <p>PiEngineer</p>
-        <p>Przemysław Piechota</p>
-        <p>Ul. Niciarniana 45</p>
-        <p>92-320 Łódź</p>
-      </div>
-
-      <div class="footer-col">
-        <p>Regon: 362358675</p>
-        <p>NIP: 726-108-80-84</p>
-        <p>VAT-UE PL 726-108-80-84</p>
-      </div>
-
-      <div class="footer-col">
-        <p>Telefon: +48 66 4848488</p>
-        <p>Telefax:</p>
-        <p>Internet: przemyslaw.piechota@wp.pl</p>
-      </div>
-
-      <div class="footer-col">
-        <p>mBank S.A.</p>
-        <p>SWIFT (BIC): BREXPLPWMBK</p>
-        <p>IBAN (PLN): PL25 1140 2004 0000 3202 7584 2595</p>
-        <p>IBAN (EUR):</p>
-      </div>
-    </div>
   </div>
 </div>
-<script src="/script.js"></script>
 </body>
 </html>

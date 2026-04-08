@@ -21,6 +21,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Map;
 
 @Controller
@@ -84,7 +85,7 @@ public class HomeController {
             return "index";
         }
 
-        return "webpage";
+        return "faktura";
     }
 
 @GetMapping("/generate-invoice")
@@ -115,16 +116,17 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
     context.setVariable("stawkaVAT", stawkaVAT);
     context.setVariable("vatValue", vatValue);
     context.setVariable("grossPrice", grossPrice);
+    context.setVariable("logoBase64", getBase64Image());
 
-    String html = templateEngine.process("invoice-pdf", context);
+    String html = templateEngine.process("faktura-pdf", context);
 
-    String css = loadCss();
-    html = html.replace("</head>", "<style>" + css + "</style></head>");
+//    String css = loadCss();
+//    html = html.replace("</head>", "<style>" + css + "</style></head>")   ;
 
     byte[] pdf = generatePdfWithPuppeteer(html);
 
     return ResponseEntity.ok()
-            .header("Content-Disposition", "attachment; filename=fakturaa.pdf")
+            .header("Content-Disposition", "attachment; filename=faktura.pdf")
             .contentType(MediaType.APPLICATION_PDF)
             .body(pdf);
 }
@@ -144,7 +146,8 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
             ObjectMapper mapper = new ObjectMapper();
 
             String json = mapper.writeValueAsString(
-                    Map.of("html", html)
+                    Map.of("html", html,
+                            "logoBase64", getBase64Image())
             );
 
             HttpRequest request = HttpRequest.newBuilder()
@@ -159,6 +162,15 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
 
             return response.body();
 
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String getBase64Image() {
+        try (InputStream is = getClass().getResourceAsStream("/static/navLogo.png")) {
+            byte[] bytes = is.readAllBytes();
+            return Base64.getEncoder().encodeToString(bytes);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
