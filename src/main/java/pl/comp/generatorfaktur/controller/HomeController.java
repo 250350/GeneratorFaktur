@@ -74,11 +74,11 @@ public class HomeController {
         model.addAttribute("nip", invoiceRequest.getNip());
         model.addAttribute("description", invoiceRequest.getDescription());
         model.addAttribute("amount", invoiceRequest.getAmount());
-        model.addAttribute("netPriceForOne", netPriceForOne);
-        model.addAttribute("netPrice", invoiceRequest.getNetPrice());
+        model.addAttribute("netPriceForOne", String.format("%.2f", netPriceForOne));
+        model.addAttribute("netPrice", String.format("%.2f", invoiceRequest.getNetPrice()));
         model.addAttribute("stawkaVAT", invoiceRequest.getStawkaVAT());
-        model.addAttribute("vatValue", vatValue);
-        model.addAttribute("grossPrice", grossPrice);
+        model.addAttribute("vatValue", String.format("%.2f", vatValue));
+        model.addAttribute("grossPrice", String.format("%.2f", grossPrice));
 
         if (result.hasErrors()) {
             invoiceRequest.getAllFields();
@@ -111,17 +111,14 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
     context.setVariable("nip", nip);
     context.setVariable("description", description);
     context.setVariable("amount", amount);
-    context.setVariable("netPriceForOne", netPriceForOne);
-    context.setVariable("netPrice", netPrice);
+    context.setVariable("netPriceForOne", String.format("%.2f", netPriceForOne));
+    context.setVariable("netPrice", String.format("%.2f", netPrice));
     context.setVariable("stawkaVAT", stawkaVAT);
-    context.setVariable("vatValue", vatValue);
-    context.setVariable("grossPrice", grossPrice);
+    context.setVariable("vatValue", String.format("%.2f", vatValue));
+    context.setVariable("grossPrice", String.format("%.2f", grossPrice));
     context.setVariable("logoBase64", getBase64Image());
 
     String html = templateEngine.process("faktura-pdf", context);
-
-//    String css = loadCss();
-//    html = html.replace("</head>", "<style>" + css + "</style></head>")   ;
 
     byte[] pdf = generatePdfWithPuppeteer(html);
 

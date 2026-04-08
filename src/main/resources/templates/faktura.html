@@ -290,12 +290,12 @@
       <tr>
         <td>1</td>
         <td><span th:text="${description}"></span></td>
-        <td><span th:text="${amount}"></span></td>
-        <td><span th:text="${netPriceForOne}"></span></td>
-        <td><span th:text="${netPrice}"></span></td>
-        <td><span th:text="${stawkaVAT}"></span></td>
-        <td><span th:text="${vatValue}"></span></td>
-        <td><span th:text="${grossPrice}"></span></td>
+        <td><span th:text="${amount}"></span> szt.</td>
+        <td><span th:text="${netPriceForOne}"></span> PLN</td>
+        <td><span th:text="${netPrice}"></span> PLN</td>
+        <td><span th:text="${stawkaVAT}"></span>%</td>
+        <td><span th:text="${vatValue}"></span> PLN</td>
+        <td><span th:text="${grossPrice}"></span> PLN</td>
       </tr>
 
       <tr>
@@ -303,10 +303,10 @@
         <td></td>
         <td></td>
         <td class="text-bold">Suma:</td>
-        <td class="text-bold"><span th:text="${netPrice}"></span></td>
+        <td class="text-bold"><span th:text="${netPrice}"></span> PLN</td>
         <td></td>
-        <td class="text-bold"><span th:text="${vatValue}"></span></td>
-        <td class="text-bold"><span th:text="${grossPrice}"></span></td>
+        <td class="text-bold"><span th:text="${vatValue}"></span> PLN</td>
+        <td class="text-bold"><span th:text="${grossPrice}"></span> PLN</td>
       </tr>
       </tbody>
     </table>
@@ -314,11 +314,11 @@
     <br>
 
     <!-- ===== SUMMARY ===== -->
-    <p><strong>Razem do zapłaty: <span th:text="${grossPrice}"></span></strong></p>
+    <p><strong>Razem do zapłaty: <span th:text="${grossPrice}"></span> PLN</strong></p>
 
     <div class="line"></div>
 
-    <p>Słownie: sześćset siedemdziesiąt złoty i 35 groszy</p>
+<!--    <p>Słownie: sześćset siedemdziesiąt złoty i 35 groszy</p>-->
 
     <br>
     <br>
