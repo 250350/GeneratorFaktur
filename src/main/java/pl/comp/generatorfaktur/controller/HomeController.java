@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import pl.comp.generatorfaktur.entities.InvoiceItem;
 import pl.comp.generatorfaktur.entities.InvoiceRequest;
 import tools.jackson.databind.ObjectMapper;
 
@@ -22,15 +23,16 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 
 @Controller
 public class HomeController {
     private final TemplateEngine templateEngine;
-    private double vat;
-    private double vatValue;
-    private double grossPrice;
-    private double netPrice;
+//    private double vat;
+//    private double vatValue;
+//    private double grossPrice;
+//    private double netPrice;
 
     public HomeController(TemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
@@ -49,41 +51,49 @@ public class HomeController {
             Model model
 
     ) {
-        setVAT(invoiceRequest.getStawkaVAT());
-        double netPriceForOne = invoiceRequest.getNetPrice();
-        netPrice = invoiceRequest.getNetPrice();
-        setNetPrice(calculateNetPrice(netPrice, invoiceRequest.getAmount()));
-        invoiceRequest.setNetPrice(netPrice);
-        setVatValue(calculateValueVAT(invoiceRequest.getNetPrice()));
-        setGrossPrice(calculateGrossPrice(invoiceRequest.getNetPrice()));
+        if (result.hasErrors()) {
+            invoiceRequest.getAllFields();
+            return "index";
+        }
+//        setVAT(invoiceRequest.getStawkaVAT());
+//        double netPriceForOne = invoiceRequest.getNetPrice();
+//        netPrice = invoiceRequest.getNetPrice();
+//        setNetPrice(calculateNetPrice(netPrice, invoiceRequest.getAmount()));
+//        invoiceRequest.setNetPrice(netPrice);
+//        setVatValue(calculateValueVAT(invoiceRequest.getNetPrice()));
+//        setGrossPrice(calculateGrossPrice(invoiceRequest.getNetPrice()));
+
+        double totalNet = 0;
+        for (InvoiceItem item : invoiceRequest.getItems()) {
+            double itemTotal = item.getNetPrice() * item.getAmount();
+            totalNet += itemTotal;
+        }
+
+        double vat = Double.parseDouble(invoiceRequest.getStawkaVAT()) / 100.0;
+        double vatValue = totalNet * vat;
+        double grossPrice = totalNet + vatValue;
+
         session.setAttribute("companyName", invoiceRequest.getCompanyName());
         session.setAttribute("address", invoiceRequest.getAddress());
         session.setAttribute("postalCodeAndCity", invoiceRequest.getPostalCodeAndCity());
         session.setAttribute("nip", invoiceRequest.getNip());
-        session.setAttribute("description", invoiceRequest.getDescription());
-        session.setAttribute("amount", invoiceRequest.getAmount());
-        session.setAttribute("netPriceForOne", netPriceForOne);
-        session.setAttribute("netPrice", invoiceRequest.getNetPrice());
-        session.setAttribute("stawkaVAT", invoiceRequest.getStawkaVAT());
+        session.setAttribute("items", invoiceRequest.getItems());
+        session.setAttribute("stawkaVAT", vat);
         session.setAttribute("vatValue", vatValue);
         session.setAttribute("grossPrice", grossPrice);
+        session.setAttribute("netPrice", totalNet);
+        session.setAttribute("completionOfServiceDate", invoiceRequest.getCompletionOfServiceDate());
 
         model.addAttribute("companyName", invoiceRequest.getCompanyName());
         model.addAttribute("address", invoiceRequest.getAddress());
         model.addAttribute("postalCodeAndCity", invoiceRequest.getPostalCodeAndCity());
         model.addAttribute("nip", invoiceRequest.getNip());
-        model.addAttribute("description", invoiceRequest.getDescription());
-        model.addAttribute("amount", invoiceRequest.getAmount());
-        model.addAttribute("netPriceForOne", String.format("%.2f", netPriceForOne));
-        model.addAttribute("netPrice", String.format("%.2f", invoiceRequest.getNetPrice()));
-        model.addAttribute("stawkaVAT", invoiceRequest.getStawkaVAT());
+        model.addAttribute("items", invoiceRequest.getItems());
+        model.addAttribute("netPrice", String.format("%.2f", totalNet));
         model.addAttribute("vatValue", String.format("%.2f", vatValue));
         model.addAttribute("grossPrice", String.format("%.2f", grossPrice));
-
-        if (result.hasErrors()) {
-            invoiceRequest.getAllFields();
-            return "index";
-        }
+        model.addAttribute("stawkaVAT", vat);
+        model.addAttribute("completionOfServiceDate", invoiceRequest.getCompletionOfServiceDate());
 
         return "faktura";
     }
@@ -95,27 +105,39 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
     String address = (String) session.getAttribute("address");
     String postalCodeAndCity = (String) session.getAttribute("postalCodeAndCity");
     String nip = (String) session.getAttribute("nip");
-    String description = (String) session.getAttribute("description");
-    Integer amountObj = (Integer) session.getAttribute("amount");
-    int amount = amountObj != null ? amountObj : 0;
-    Double netPriceForOneObj = (Double) session.getAttribute("netPriceForOne");
-    double netPriceForOne = netPriceForOneObj != null ? netPriceForOneObj : 0.0;
+    String completionOfServiceDate = (String) session.getAttribute("completionOfServiceDate");
+//    String description = (String) session.getAttribute("description");
+//    Integer amountObj = (Integer) session.getAttribute("amount");
+//    int amount = amountObj != null ? amountObj : 0;
+//    Double netPriceForOneObj = (Double) session.getAttribute("netPriceForOne");
+//    double netPriceForOne = netPriceForOneObj != null ? netPriceForOneObj : 0.0;
+    List<InvoiceItem> items = (List<InvoiceItem>) session.getAttribute("items");
     Double netPriceObj = (Double) session.getAttribute("netPrice");
     double netPrice = netPriceObj != null ? netPriceObj : 0.0;
-    String stawkaVAT = (String) session.getAttribute("stawkaVAT");
+    Double vatObj = (Double) session.getAttribute("stawkaVAT");
+    double stawkaVAT = vatObj != null ? vatObj : 0.0;
+
+    Double vatValueObj = (Double) session.getAttribute("vatValue");
+    double vatValue = vatValueObj != null ? vatValueObj : 0.0;
+    Double grossPriceObj = (Double) session.getAttribute("grossPrice");
+    double grossPrice = grossPriceObj != null ? grossPriceObj : 0.0;
+
+
 
     Context context = new Context();
     context.setVariable("companyName", companyName);
     context.setVariable("address", address);
     context.setVariable("postalCodeAndCity", postalCodeAndCity);
     context.setVariable("nip", nip);
-    context.setVariable("description", description);
-    context.setVariable("amount", amount);
-    context.setVariable("netPriceForOne", String.format("%.2f", netPriceForOne));
+//    context.setVariable("description", description);
+//    context.setVariable("amount", amount);
+//    context.setVariable("netPriceForOne", String.format("%.2f", netPriceForOne));
+    context.setVariable("items", items);
     context.setVariable("netPrice", String.format("%.2f", netPrice));
     context.setVariable("stawkaVAT", stawkaVAT);
     context.setVariable("vatValue", String.format("%.2f", vatValue));
     context.setVariable("grossPrice", String.format("%.2f", grossPrice));
+    context.setVariable("completionOfServiceDate", completionOfServiceDate);
     context.setVariable("logoBase64", getBase64Image());
 
     String html = templateEngine.process("faktura-pdf", context);
@@ -173,32 +195,32 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
         }
     }
 
-    private double calculateGrossPrice(double netPrice) {
-        return netPrice + vatValue;
-    }
-
-    private double calculateValueVAT(double netPrice) {
-        return netPrice * vat;
-    }
-
-    private double calculateNetPrice(double netPrice, int amount) {
-        return netPrice * amount;
-    }
-
-    private void setVAT(String stawkaVAT) {
-        this.vat = Double.parseDouble(stawkaVAT) / 100.0;
-    }
-
-    public void setVatValue(double vatValue) {
-        this.vatValue = Math.round(vatValue * 100.0) / 100.0;
-    }
-
-    public void setNetPrice(double netPrice) {
-        this.netPrice = Math.round(netPrice * 100.0) / 100.0;
-
-    }
-
-    public void setGrossPrice(double grossPrice) {
-        this.grossPrice = Math.round(grossPrice * 100.0) / 100.0;
-    }
+//    private double calculateGrossPrice(double netPrice) {
+//        return netPrice + vatValue;
+//    }
+//
+//    private double calculateValueVAT(double netPrice) {
+//        return netPrice * vat;
+//    }
+//
+//    private double calculateNetPrice(double netPrice, int amount) {
+//        return netPrice * amount;
+//    }
+//
+//    private void setVAT(String stawkaVAT) {
+//        this.vat = Double.parseDouble(stawkaVAT) / 100.0;
+//    }
+//
+//    public void setVatValue(double vatValue) {
+//        this.vatValue = Math.round(vatValue * 100.0) / 100.0;
+//    }
+//
+//    public void setNetPrice(double netPrice) {
+//        this.netPrice = Math.round(netPrice * 100.0) / 100.0;
+//
+//    }
+//
+//    public void setGrossPrice(double grossPrice) {
+//        this.grossPrice = Math.round(grossPrice * 100.0) / 100.0;
+//    }
 }

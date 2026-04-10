@@ -2,6 +2,9 @@ package pl.comp.generatorfaktur.entities;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.List;
 
 @Data
 public class InvoiceRequest {
@@ -20,25 +23,21 @@ public class InvoiceRequest {
     @NotBlank(message = "nip is mandatory")
     private String nip;
 
-    private String description;
-
-    @Min(1)
-    private int amount;
-
-    @Positive(message = "netPrice is mandatory")
-    private double netPrice;
-
     @NotBlank(message = "stawkaVAT is mandatory")
+    @NotNull
     private String stawkaVAT;
+
+    @NotBlank
+    @DateTimeFormat
+    private String completionOfServiceDate;
+
+    private List<InvoiceItem> items;
 
     public void getAllFields() {
         System.out.println("companyName: " + companyName);
         System.out.println("address: " + address);
         System.out.println("postalCodeAndCity: " + postalCodeAndCity);
         System.out.println("nip: " + nip);
-        System.out.println("description: " + description);
-        System.out.println("amount: " + amount);
-        System.out.println("netPrice: " + netPrice);
         System.out.println("stawkaVAT: " + stawkaVAT);
     }
 

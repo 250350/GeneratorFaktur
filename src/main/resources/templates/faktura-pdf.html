@@ -17,13 +17,14 @@
 
     @page {
       size: A4;
-      margin: 0;
-      padding-top: 5mm;
+      /*margin-top: 25mm;*/
+      padding: 20mm;
     }
 
     .page {
       width: 210mm;
-      padding: 20mm;
+      /*padding: 20mm;*/
+      padding: 0;
       box-sizing: border-box;
     }
 
@@ -126,6 +127,10 @@
     .text-middle{
       font-size: 13px;
     }
+
+    .nowrap {
+      white-space: nowrap;
+    }
   </style>
 
 </head>
@@ -150,7 +155,7 @@
           <p>Nabywca:</p>
           <br>
           <p><strong><span th:text="${companyName}"></span></strong></p>
-          <p><span th:text="${address}"></span></p>
+          <p>ul. <span th:text="${address}"></span></p>
           <p><span th:text="${postalCodeAndCity}"></span></p>
           <p>NIP: <span th:text="${nip}"></span></p>
         </td>
@@ -160,7 +165,7 @@
 
     <!-- ===== INFO ===== -->
     <p class="right text-small">Łódź, dn. 2024-01-31</p>
-    <p class="right text-small">Data wykonania usługi: 2024-01-31</p>
+    <p class="right text-small">Data wykonania usługi: <span th:text="${completionOfServiceDate}"></span></p>
 
     <br>
     <br>
@@ -169,8 +174,6 @@
     <br>
     <br>
     <p class="text-middle">Zamówienie z dnia 31.01.2024 nr 92910-24-01-18</p>
-    <p class="text-middle">Nazwa / opis prac:</p>
-    <p class="text-middle"><span th:text="${description}"></span></p>
     <br>
 
     <!-- ===== MAIN TABLE ===== -->
@@ -189,15 +192,16 @@
       </thead>
 
       <tbody>
-      <tr>
-        <td>1</td>
-        <td><span th:text="${description}"></span></td>
-        <td><span th:text="${amount}"></span> szt.</td>
-        <td><span th:text="${netPriceForOne}"></span> PLN</td>
-        <td><span th:text="${netPrice}"></span> PLN</td>
-        <td><span th:text="${stawkaVAT}"></span>%</td>
-        <td><span th:text="${vatValue}"></span> PLN</td>
-        <td><span th:text="${grossPrice}"></span> PLN</td>
+      <tr th:each="item, iterStat : ${items}">
+        <td th:text="${iterStat.index + 1}"></td> <!-- Lp -->
+        <td th:text="${item.description}"></td>
+        <td th:text="${item.amount} + ' szt.'"></td>
+        <td th:text="${#numbers.formatDecimal(item.netPrice, 1, 2)} + ' PLN'"></td>
+        <td th:text="${#numbers.formatDecimal(item.netPrice * item.amount, 1, 2)} + ' PLN'"></td>
+        <td th:text="${#numbers.formatDecimal(stawkaVAT * 100.0, 0, 0)} + '%'"></td>
+        <td th:text="${#numbers.formatDecimal((item.netPrice * item.amount) * stawkaVAT, 1, 2)} + ' PLN'"></td>
+        <td class="nowrap"
+                th:text="${#numbers.formatDecimal((item.netPrice * item.amount) * (1 + stawkaVAT), 1, 2)} + ' PLN'"></td>
       </tr>
 
       <tr>
