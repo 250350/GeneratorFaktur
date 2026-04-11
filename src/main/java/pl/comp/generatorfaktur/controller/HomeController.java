@@ -22,6 +22,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +84,7 @@ public class HomeController {
         session.setAttribute("grossPrice", grossPrice);
         session.setAttribute("netPrice", totalNet);
         session.setAttribute("completionOfServiceDate", invoiceRequest.getCompletionOfServiceDate());
+        session.setAttribute("today", LocalDate.now());
 
         model.addAttribute("companyName", invoiceRequest.getCompanyName());
         model.addAttribute("address", invoiceRequest.getAddress());
@@ -94,6 +96,7 @@ public class HomeController {
         model.addAttribute("grossPrice", String.format("%.2f", grossPrice));
         model.addAttribute("stawkaVAT", vat);
         model.addAttribute("completionOfServiceDate", invoiceRequest.getCompletionOfServiceDate());
+        model.addAttribute("today", LocalDate.now());
 
         return "faktura";
     }
@@ -106,6 +109,7 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
     String postalCodeAndCity = (String) session.getAttribute("postalCodeAndCity");
     String nip = (String) session.getAttribute("nip");
     String completionOfServiceDate = (String) session.getAttribute("completionOfServiceDate");
+    LocalDate today = (LocalDate) session.getAttribute("today");
 //    String description = (String) session.getAttribute("description");
 //    Integer amountObj = (Integer) session.getAttribute("amount");
 //    int amount = amountObj != null ? amountObj : 0;
@@ -138,6 +142,7 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
     context.setVariable("vatValue", String.format("%.2f", vatValue));
     context.setVariable("grossPrice", String.format("%.2f", grossPrice));
     context.setVariable("completionOfServiceDate", completionOfServiceDate);
+    context.setVariable("today", today);
     context.setVariable("logoBase64", getBase64Image());
 
     String html = templateEngine.process("faktura-pdf", context);

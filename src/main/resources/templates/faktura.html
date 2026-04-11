@@ -260,7 +260,7 @@
     <br>
 
     <!-- ===== INFO ===== -->
-    <p class="right text-small">Łódź, dn. 2024-01-31</p>
+    <p class="right text-small">Łódź, dn. <span th:text="${#temporals.format(today, 'yyyy-MM-dd')}"></span></p>
     <p class="right text-small">Data wykonania usługi: <span th:text="${completionOfServiceDate}"></span></p>
 
     <br>
