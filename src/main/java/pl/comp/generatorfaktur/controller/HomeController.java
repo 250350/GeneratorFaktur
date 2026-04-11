@@ -85,6 +85,8 @@ public class HomeController {
         session.setAttribute("netPrice", totalNet);
         session.setAttribute("completionOfServiceDate", invoiceRequest.getCompletionOfServiceDate());
         session.setAttribute("today", LocalDate.now());
+        session.setAttribute("invoiceNumber", invoiceRequest.getInvoiceNumber());
+        session.setAttribute("paymentDate", invoiceRequest.getPaymentDate());
 
         model.addAttribute("companyName", invoiceRequest.getCompanyName());
         model.addAttribute("address", invoiceRequest.getAddress());
@@ -97,6 +99,8 @@ public class HomeController {
         model.addAttribute("stawkaVAT", vat);
         model.addAttribute("completionOfServiceDate", invoiceRequest.getCompletionOfServiceDate());
         model.addAttribute("today", LocalDate.now());
+        model.addAttribute("invoiceNumber", invoiceRequest.getInvoiceNumber());
+        model.addAttribute("paymentDate", invoiceRequest.getPaymentDate());
 
         return "faktura";
     }
@@ -109,6 +113,8 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
     String postalCodeAndCity = (String) session.getAttribute("postalCodeAndCity");
     String nip = (String) session.getAttribute("nip");
     String completionOfServiceDate = (String) session.getAttribute("completionOfServiceDate");
+    String paymentDate = (String) session.getAttribute("paymentDate");
+    int invoiceNumber = (int) session.getAttribute("invoiceNumber");
     LocalDate today = (LocalDate) session.getAttribute("today");
 //    String description = (String) session.getAttribute("description");
 //    Integer amountObj = (Integer) session.getAttribute("amount");
@@ -142,7 +148,9 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
     context.setVariable("vatValue", String.format("%.2f", vatValue));
     context.setVariable("grossPrice", String.format("%.2f", grossPrice));
     context.setVariable("completionOfServiceDate", completionOfServiceDate);
+    context.setVariable("paymentDate", paymentDate);
     context.setVariable("today", today);
+    context.setVariable("invoiceNumber", invoiceNumber);
     context.setVariable("logoBase64", getBase64Image());
 
     String html = templateEngine.process("faktura-pdf", context);

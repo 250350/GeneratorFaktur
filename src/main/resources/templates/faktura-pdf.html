@@ -169,12 +169,12 @@
 
     <br>
     <br>
-    <p class="title center">FAKTURA VAT Nr 098/2024</p>
+    <p class="title center">FAKTURA VAT Nr <span th:text="${invoiceNumber}"></span>/<span th:text="${#temporals.format(today, 'yyyy')}"></span></p>
 
     <br>
     <br>
-    <p class="text-middle">Zamówienie z dnia 31.01.2024 nr 92910-24-01-18</p>
-    <br>
+<!--    <p class="text-middle">Zamówienie z dnia 31.01.2024 nr 92910-24-01-18</p>-->
+<!--    <br>-->
 
     <!-- ===== MAIN TABLE ===== -->
     <table class="main-table">
@@ -228,7 +228,9 @@
     <br>
     <p class="text-small">
       Płatność – przelew bankowy na konto nr PL 25 1140 2004 0000 3202 7584 2595
-      w mBank S.A., SWIFT: BREXPLPWMBK, w terminie do 15.02.2024.
+      w mBank S.A., SWIFT: BREXPLPWMBK,
+      <br>
+      w terminie do <span th:text="${paymentDate}"></span>.
     </p>
 
     <!-- ===== SIGNATURES ===== -->

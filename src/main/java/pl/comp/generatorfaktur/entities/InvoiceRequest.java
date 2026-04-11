@@ -27,9 +27,16 @@ public class InvoiceRequest {
     @NotNull
     private String stawkaVAT;
 
+    @Min(1)
+    private int invoiceNumber;
+
     @NotBlank
     @DateTimeFormat
     private String completionOfServiceDate;
+
+    @NotBlank
+    @DateTimeFormat
+    private String paymentDate;
 
     private List<InvoiceItem> items;
 
