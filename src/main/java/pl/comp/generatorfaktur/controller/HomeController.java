@@ -196,7 +196,7 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
 
             HttpRequest request = HttpRequest.newBuilder()
 //                    .uri(URI.create("http://localhost:3001/pdf"))
-                    .uri(URI.create("https://pdfservice-5rfv.onrender.com/pdf"))
+                    .uri(URI.create("https://pdfservice-5rfv.onrender.com"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
