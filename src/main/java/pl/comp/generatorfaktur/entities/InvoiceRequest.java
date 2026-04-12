@@ -30,9 +30,16 @@ public class InvoiceRequest {
     @Min(1)
     private int invoiceNumber;
 
+    @Pattern(regexp = "\\d{26}", message = "niepoprawny IBAN")
     @NotBlank
-    @DateTimeFormat
+    private String bankAccountNumber;
+
+    @NotBlank
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String completionOfServiceDate;
+
+    @Pattern(regexp = "^$|^[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}[A-Z0-9]{3}$")
+    private String swift;
 
     @NotBlank
     @DateTimeFormat

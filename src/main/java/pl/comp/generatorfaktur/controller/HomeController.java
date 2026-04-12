@@ -87,6 +87,11 @@ public class HomeController {
         session.setAttribute("today", LocalDate.now());
         session.setAttribute("invoiceNumber", invoiceRequest.getInvoiceNumber());
         session.setAttribute("paymentDate", invoiceRequest.getPaymentDate());
+        session.setAttribute("bankAccountNumber", formatBankAccountNumber(invoiceRequest.getBankAccountNumber()));
+        if (invoiceRequest.getSwift() != null) {
+            session.setAttribute("swift", invoiceRequest.getSwift());
+            model.addAttribute("swift", invoiceRequest.getSwift());
+        }
 
         model.addAttribute("companyName", invoiceRequest.getCompanyName());
         model.addAttribute("address", invoiceRequest.getAddress());
@@ -101,6 +106,7 @@ public class HomeController {
         model.addAttribute("today", LocalDate.now());
         model.addAttribute("invoiceNumber", invoiceRequest.getInvoiceNumber());
         model.addAttribute("paymentDate", invoiceRequest.getPaymentDate());
+        model.addAttribute("bankAccountNumber", formatBankAccountNumber(invoiceRequest.getBankAccountNumber()));
 
         return "faktura";
     }
@@ -114,6 +120,7 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
     String nip = (String) session.getAttribute("nip");
     String completionOfServiceDate = (String) session.getAttribute("completionOfServiceDate");
     String paymentDate = (String) session.getAttribute("paymentDate");
+    String bankAccountNumber = (String) session.getAttribute("bankAccountNumber");
     int invoiceNumber = (int) session.getAttribute("invoiceNumber");
     LocalDate today = (LocalDate) session.getAttribute("today");
 //    String description = (String) session.getAttribute("description");
@@ -149,9 +156,14 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
     context.setVariable("grossPrice", String.format("%.2f", grossPrice));
     context.setVariable("completionOfServiceDate", completionOfServiceDate);
     context.setVariable("paymentDate", paymentDate);
+    context.setVariable("bankAccountNumber", bankAccountNumber);
     context.setVariable("today", today);
     context.setVariable("invoiceNumber", invoiceNumber);
     context.setVariable("logoBase64", getBase64Image());
+    if (session.getAttribute("swift") != null) {
+        String swift = (String) session.getAttribute("swift");
+        context.setVariable("swift", swift);
+    }
 
     String html = templateEngine.process("faktura-pdf", context);
 
@@ -208,32 +220,17 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
         }
     }
 
-//    private double calculateGrossPrice(double netPrice) {
-//        return netPrice + vatValue;
-//    }
-//
-//    private double calculateValueVAT(double netPrice) {
-//        return netPrice * vat;
-//    }
-//
-//    private double calculateNetPrice(double netPrice, int amount) {
-//        return netPrice * amount;
-//    }
-//
-//    private void setVAT(String stawkaVAT) {
-//        this.vat = Double.parseDouble(stawkaVAT) / 100.0;
-//    }
-//
-//    public void setVatValue(double vatValue) {
-//        this.vatValue = Math.round(vatValue * 100.0) / 100.0;
-//    }
-//
-//    public void setNetPrice(double netPrice) {
-//        this.netPrice = Math.round(netPrice * 100.0) / 100.0;
-//
-//    }
-//
-//    public void setGrossPrice(double grossPrice) {
-//        this.grossPrice = Math.round(grossPrice * 100.0) / 100.0;
-//    }
+    private String formatBankAccountNumber(String bankAccountNumber) {
+        String clean =  bankAccountNumber.replaceAll("\\s+", "");
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < clean.length(); i++) {
+            if (i == 2 || i > 2 && (i - 2) % 4 == 0) {
+                stringBuilder.append(" ");
+            }
+            stringBuilder.append(clean.charAt(i));
+        }
+
+        return stringBuilder.toString();
+    }
 }

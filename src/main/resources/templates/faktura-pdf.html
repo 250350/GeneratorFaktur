@@ -138,6 +138,7 @@
 <body>
 <div class="page">
   <div class="invoice">
+    <div class="line"></div>
     <!-- ===== SPRZEDAWCA / NABYWCA ===== -->
     <table class="inner-table">
       <tr>
@@ -227,10 +228,12 @@
 
     <br>
     <p class="text-small">
-      Płatność – przelew bankowy na konto nr PL 25 1140 2004 0000 3202 7584 2595
-      w mBank S.A., SWIFT: BREXPLPWMBK,
+      Płatność – przelew bankowy na konto nr PL <span th:text="${bankAccountNumber}"></span>
       <br>
-      w terminie do <span th:text="${paymentDate}"></span>.
+      SWIFT: <span th:if="${swift != null and !#strings.isEmpty(swift)}"
+                     th:text="${swift}"></span>
+      <br>
+      Płatność w terminie do <span th:text="${paymentDate}"></span>
     </p>
 
     <!-- ===== SIGNATURES ===== -->
