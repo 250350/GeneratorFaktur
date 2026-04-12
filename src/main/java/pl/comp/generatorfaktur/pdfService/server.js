@@ -13,8 +13,13 @@ app.post("/pdf", async (req, res) => {
         console.log("HTML LENGTH:", html?.length);
         console.log("LOGO EXISTS:", !!logoBase64);
 
+        // const browser = await puppeteer.launch({
+        //     headless: "new"
+        // });
+
         const browser = await puppeteer.launch({
-            headless: "new"
+            headless: "new",
+            args: ["--no-sandbox", "--disable-setuid-sandbox"]
         });
 
         const page = await browser.newPage();
@@ -43,6 +48,10 @@ app.post("/pdf", async (req, res) => {
     }
 });
 
-app.listen(3001, () => {
-    console.log("PDF service running on port 3001");
+// app.listen(3001, () => {
+//     console.log("PDF service running on port 3001");
+const PORT = process.env.PORT || 3001;
+
+app.listen(PORT, () => {
+    console.log("PDF service running on port " + PORT);
 });
