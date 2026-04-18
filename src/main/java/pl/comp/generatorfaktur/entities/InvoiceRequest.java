@@ -18,8 +18,12 @@ public class InvoiceRequest {
     @NotBlank(message = "postalCodeAndCity is mandatory")
     private String postalCodeAndCity;
 
+//    Dla Polskiej Wersji:
+//    @Size(min = 13, max = 13, message = "NIP musi mieć dokładnie 10 cyfr")
+//    @NotBlank(message = "nip is mandatory")
+//    private String nip;
 
-    @Size(min = 13, max = 13, message = "NIP musi mieć dokładnie 10 cyfr")
+    @Pattern(regexp = "[A-Z][0-9]{7}[A-Z0-9]")
     @NotBlank(message = "nip is mandatory")
     private String nip;
 

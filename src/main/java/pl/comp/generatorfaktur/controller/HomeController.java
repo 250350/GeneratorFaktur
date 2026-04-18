@@ -41,7 +41,7 @@ public class HomeController {
 
     @RequestMapping("/")
     public String index() {
-        return "index";
+        return "index_es";
     }
 
     @RequestMapping("/show-invoice")
@@ -54,7 +54,7 @@ public class HomeController {
     ) {
         if (result.hasErrors()) {
             invoiceRequest.getAllFields();
-            return "index";
+            return "index_es";
         }
 //        setVAT(invoiceRequest.getStawkaVAT());
 //        double netPriceForOne = invoiceRequest.getNetPrice();
@@ -108,7 +108,7 @@ public class HomeController {
         model.addAttribute("paymentDate", invoiceRequest.getPaymentDate());
         model.addAttribute("bankAccountNumber", formatBankAccountNumber(invoiceRequest.getBankAccountNumber()));
 
-        return "faktura";
+        return "faktura_es";
     }
 
 @GetMapping("/generate-invoice")
@@ -159,18 +159,18 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
     context.setVariable("bankAccountNumber", bankAccountNumber);
     context.setVariable("today", today);
     context.setVariable("invoiceNumber", invoiceNumber);
-    context.setVariable("logoBase64", getBase64Image());
+//    context.setVariable("logoBase64", getBase64Image());
     if (session.getAttribute("swift") != null) {
         String swift = (String) session.getAttribute("swift");
         context.setVariable("swift", swift);
     }
 
-    String html = templateEngine.process("faktura-pdf", context);
+    String html = templateEngine.process("faktura-pdf_es", context);
 
     byte[] pdf = generatePdfWithPuppeteer(html);
 
     return ResponseEntity.ok()
-            .header("Content-Disposition", "attachment; filename=faktura.pdf")
+            .header("Content-Disposition", "attachment; filename=factura.pdf")
             .contentType(MediaType.APPLICATION_PDF)
             .body(pdf);
 }
@@ -185,13 +185,14 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
 
     private byte[] generatePdfWithPuppeteer(String html) {
         try {
-            HttpClient client = HttpClient.newHttpClient();
+            HttpClient client = HttpClient.newBuilder()
+                    .followRedirects(HttpClient.Redirect.NEVER)
+                    .build();
 
             ObjectMapper mapper = new ObjectMapper();
 
             String json = mapper.writeValueAsString(
-                    Map.of("html", html,
-                            "logoBase64", getBase64Image())
+                    Map.of("html", html)
             );
 
             HttpRequest request = HttpRequest.newBuilder()
@@ -200,11 +201,15 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
+            System.out.println("WYSYŁAM REQUEST DO PDF SERVICE...");
             HttpResponse<byte[]> response = client.send(
                     request,
                     HttpResponse.BodyHandlers.ofByteArray()
             );
             System.out.println("PDF HTML SIZE: " + html.length());
+            System.out.println("FINAL URL: " + request.uri());
+            System.out.println("STATUS: " + response.statusCode());
+            System.out.println("JSON: " + json);
             return response.body();
 
         } catch (Exception e) {
