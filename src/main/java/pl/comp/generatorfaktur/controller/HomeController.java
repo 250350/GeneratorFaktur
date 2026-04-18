@@ -41,6 +41,11 @@ public class HomeController {
 
     @RequestMapping("/")
     public String index() {
+        return "landingPage";
+    }
+
+    @RequestMapping("/create-invoice")
+    public String createInvoice() {
         return "index_es";
     }
 
