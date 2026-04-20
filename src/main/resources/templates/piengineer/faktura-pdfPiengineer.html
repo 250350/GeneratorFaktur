@@ -138,7 +138,6 @@
 <body>
 <div class="page">
   <div class="invoice">
-    <div class="line"></div>
     <!-- ===== SPRZEDAWCA / NABYWCA ===== -->
     <table class="inner-table">
       <tr>
@@ -149,16 +148,16 @@
           <p><strong>Przemysław Piechota</strong></p>
           <p>ul. Niciarniana 45</p>
           <p>92-320 Łódź</p>
-          <p>NIP: 726-108-80-84</p>
+          <p>nipBuyer: 726-108-80-84</p>
         </td>
 
         <td>
           <p>Nabywca:</p>
           <br>
-          <p><strong><span th:text="${companyName}"></span></strong></p>
-          <p>ul. <span th:text="${address}"></span></p>
-          <p><span th:text="${postalCodeAndCity}"></span></p>
-          <p>NIP: <span th:text="${nip}"></span></p>
+          <p><strong><span th:text="${companyNameBuyer}"></span></strong></p>
+          <p>ul. <span th:text="${addressBuyer}"></span></p>
+          <p><span th:text="${postalCodeAndCityBuyer}"></span></p>
+          <p>nipBuyer: <span th:text="${nipBuyer}"></span></p>
         </td>
       </tr>
     </table>
@@ -228,12 +227,10 @@
 
     <br>
     <p class="text-small">
-      Płatność – przelew bankowy na konto nr PL <span th:text="${bankAccountNumber}"></span>
+      Płatność – przelew bankowy na konto nr PL 25 1140 2004 0000 3202 7584 2595
+      w mBank S.A., SWIFT: BREXPLPWMBK,
       <br>
-      SWIFT: <span th:if="${swift != null and !#strings.isEmpty(swift)}"
-                     th:text="${swift}"></span>
-      <br>
-      Płatność w terminie do <span th:text="${paymentDate}"></span>
+      w terminie do <span th:text="${paymentDate}"></span>.
     </p>
 
     <!-- ===== SIGNATURES ===== -->

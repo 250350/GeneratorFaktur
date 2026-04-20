@@ -24,6 +24,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +47,7 @@ public class HomeController {
 
     @RequestMapping("/create-invoice")
     public String createInvoice() {
-        return "index_es";
+        return "spanish/index_es";
     }
 
     @RequestMapping("/show-invoice")
@@ -59,7 +60,7 @@ public class HomeController {
     ) {
         if (result.hasErrors()) {
             invoiceRequest.getAllFields();
-            return "index_es";
+            return "spanish/index_es";
         }
 //        setVAT(invoiceRequest.getStawkaVAT());
 //        double netPriceForOne = invoiceRequest.getNetPrice();
@@ -79,10 +80,14 @@ public class HomeController {
         double vatValue = totalNet * vat;
         double grossPrice = totalNet + vatValue;
 
-        session.setAttribute("companyName", invoiceRequest.getCompanyName());
-        session.setAttribute("address", invoiceRequest.getAddress());
-        session.setAttribute("postalCodeAndCity", invoiceRequest.getPostalCodeAndCity());
-        session.setAttribute("nip", invoiceRequest.getNip());
+        session.setAttribute("companyNameSeller", invoiceRequest.getCompanyNameSeller());
+        session.setAttribute("addressSeller", invoiceRequest.getAddressSeller());
+        session.setAttribute("postalCodeAndCitySeller", invoiceRequest.getPostalCodeAndCitySeller());
+        session.setAttribute("nipSeller", invoiceRequest.getNipSeller());
+        session.setAttribute("companyNameBuyer", invoiceRequest.getCompanyNameBuyer());
+        session.setAttribute("addressBuyer", invoiceRequest.getAddressBuyer());
+        session.setAttribute("postalCodeAndCityBuyer", invoiceRequest.getPostalCodeAndCityBuyer());
+        session.setAttribute("nipBuyer", invoiceRequest.getNipBuyer());
         session.setAttribute("items", invoiceRequest.getItems());
         session.setAttribute("stawkaVAT", vat);
         session.setAttribute("vatValue", vatValue);
@@ -98,10 +103,14 @@ public class HomeController {
             model.addAttribute("swift", invoiceRequest.getSwift());
         }
 
-        model.addAttribute("companyName", invoiceRequest.getCompanyName());
-        model.addAttribute("address", invoiceRequest.getAddress());
-        model.addAttribute("postalCodeAndCity", invoiceRequest.getPostalCodeAndCity());
-        model.addAttribute("nip", invoiceRequest.getNip());
+        model.addAttribute("companyNameSeller", invoiceRequest.getCompanyNameSeller());
+        model.addAttribute("addressSeller", invoiceRequest.getAddressSeller());
+        model.addAttribute("postalCodeAndCitySeller", invoiceRequest.getPostalCodeAndCitySeller());
+        model.addAttribute("nipSeller", invoiceRequest.getNipSeller());
+        model.addAttribute("companyNameBuyer", invoiceRequest.getCompanyNameBuyer());
+        model.addAttribute("addressBuyer", invoiceRequest.getAddressBuyer());
+        model.addAttribute("postalCodeAndCityBuyer", invoiceRequest.getPostalCodeAndCityBuyer());
+        model.addAttribute("nipBuyer", invoiceRequest.getNipBuyer());
         model.addAttribute("items", invoiceRequest.getItems());
         model.addAttribute("netPrice", String.format("%.2f", totalNet));
         model.addAttribute("vatValue", String.format("%.2f", vatValue));
@@ -113,18 +122,22 @@ public class HomeController {
         model.addAttribute("paymentDate", invoiceRequest.getPaymentDate());
         model.addAttribute("bankAccountNumber", formatBankAccountNumber(invoiceRequest.getBankAccountNumber()));
 
-        return "faktura_es";
+        return "spanish/faktura_es";
     }
 
 @GetMapping("/generate-invoice")
 public ResponseEntity<byte[]> generate(HttpSession session) {
 
-    String companyName = (String) session.getAttribute("companyName");
-    String address = (String) session.getAttribute("address");
-    String postalCodeAndCity = (String) session.getAttribute("postalCodeAndCity");
-    String nip = (String) session.getAttribute("nip");
-    String completionOfServiceDate = (String) session.getAttribute("completionOfServiceDate");
-    String paymentDate = (String) session.getAttribute("paymentDate");
+    String companyNameSeller = (String) session.getAttribute("companyNameSeller");
+    String addressSeller = (String) session.getAttribute("addressSeller");
+    String postalCodeAndCitySeller = (String) session.getAttribute("postalCodeAndCitySeller");
+    String nipSeller = (String) session.getAttribute("nipSeller");
+    String companyNameBuyer = (String) session.getAttribute("companyNameBuyer");
+    String addressBuyer = (String) session.getAttribute("addressBuyer");
+    String postalCodeAndCityBuyer = (String) session.getAttribute("postalCodeAndCityBuyer");
+    String nipBuyer = (String) session.getAttribute("nipBuyer");
+    Date completionOfServiceDate = (Date) session.getAttribute("completionOfServiceDate");
+    Date paymentDate = (Date) session.getAttribute("paymentDate");
     String bankAccountNumber = (String) session.getAttribute("bankAccountNumber");
     int invoiceNumber = (int) session.getAttribute("invoiceNumber");
     LocalDate today = (LocalDate) session.getAttribute("today");
@@ -147,10 +160,14 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
 
 
     Context context = new Context();
-    context.setVariable("companyName", companyName);
-    context.setVariable("address", address);
-    context.setVariable("postalCodeAndCity", postalCodeAndCity);
-    context.setVariable("nip", nip);
+    context.setVariable("companyNameSeller", companyNameSeller);
+    context.setVariable("addressSeller", addressSeller);
+    context.setVariable("postalCodeAndCitySeller", postalCodeAndCitySeller);
+    context.setVariable("nipSeller", nipSeller);
+    context.setVariable("companyNameBuyer", companyNameBuyer);
+    context.setVariable("addressBuyer", addressBuyer);
+    context.setVariable("postalCodeAndCityBuyer", postalCodeAndCityBuyer);
+    context.setVariable("nipBuyer", nipBuyer);
 //    context.setVariable("description", description);
 //    context.setVariable("amount", amount);
 //    context.setVariable("netPriceForOne", String.format("%.2f", netPriceForOne));
@@ -170,7 +187,7 @@ public ResponseEntity<byte[]> generate(HttpSession session) {
         context.setVariable("swift", swift);
     }
 
-    String html = templateEngine.process("faktura-pdf_es", context);
+    String html = templateEngine.process("spanish/faktura-pdf_es", context);
 
     byte[] pdf = generatePdfWithPuppeteer(html);
 

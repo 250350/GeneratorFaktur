@@ -102,6 +102,53 @@
       text-align: center;
     }
 
+    .footer {
+      position: absolute;
+      display: flex;
+      bottom: 15px;
+      left: 20mm;
+      right: 20mm;
+
+      justify-content: space-between;
+      margin-top: 60px;
+      font-size: 9px;
+    }
+
+    .footer-col {
+      width: 23%;
+    }
+
+    .footer-col p {
+      margin: 2px 0;
+    }
+
+    .footer-col.left {
+      text-align: left;
+    }
+
+    .footer-col.center {
+      text-align: center;
+    }
+
+    .footer-col.right {
+      text-align: right;
+    }
+
+    .logo-top {
+      position: absolute;
+      text-align: left;
+      margin-left: 20mm;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-295%);
+    }
+
+    .logo-top img {
+      max-width: 160px;
+      width: 100%;
+      height: auto;
+    }
+
     .page {
       margin-top: 80px;
     }
@@ -182,6 +229,9 @@
 
 <body>
 <div class="page">
+  <div class="logo-top">
+    <img src="/navLogo.png" alt="logo">
+  </div>
   <div class="invoice">
     <!-- ===== SPRZEDAWCA / NABYWCA ===== -->
     <div class="line"></div>
@@ -194,16 +244,16 @@
           <p><strong>Przemysław Piechota</strong></p>
           <p>ul. Niciarniana 45</p>
           <p>92-320 Łódź</p>
-          <p>NIP: 726-108-80-84</p>
+          <p>nipBuyer: 726-108-80-84</p>
         </td>
 
         <td>
           <p>Nabywca:</p>
           <br>
-          <p><strong><span th:text="${companyName}"></span></strong></p>
-          <p>ul. <span th:text="${address}"></span></p>
-          <p><span th:text="${postalCodeAndCity}"></span></p>
-          <p>NIP: <span th:text="${nip}"></span></p>
+          <p><strong><span th:text="${companyNameBuyer}"></span></strong></p>
+          <p>ul. <span th:text="${addressBuyer}"></span></p>
+          <p><span th:text="${postalCodeAndCityBuyer}"></span></p>
+          <p>nipBuyer: <span th:text="${nipBuyer}"></span></p>
         </td>
       </tr>
     </table>
@@ -219,6 +269,9 @@
 
     <br>
     <br>
+<!--    <p class="text-middle">Zamówienie z dnia 31.01.2024 nr 92910-24-01-18</p>-->
+<!--    <br>-->
+
 
     <!-- ===== MAIN TABLE ===== -->
     <table class="main-table">
@@ -236,6 +289,17 @@
       </thead>
 
       <tbody>
+<!--      <tr>-->
+<!--        <td>1</td>-->
+<!--        <td><span th:text="${description}"></span></td>-->
+<!--          <td><span th:text="${amount}"></span> szt.</td>-->
+<!--        <td><span th:text="${netPriceForOne}"></span> PLN</td>-->
+<!--        <td><span th:text="${netPrice}"></span> PLN</td>-->
+<!--        <td><span th:text="${stawkaVAT}"></span>%</td>-->
+<!--        <td><span th:text="${vatValue}"></span> PLN</td>-->
+<!--        <td><span th:text="${grossPrice}"></span> PLN</td>-->
+<!--      </tr>-->
+
       <tr th:each="item, iterStat : ${items}">
         <td th:text="${iterStat.index + 1}"></td> <!-- Lp -->
         <td th:text="${item.description}"></td>
@@ -273,12 +337,10 @@
     <br>
     <br>
     <p>
-      Płatność – przelew bankowy na konto nr PL <span th:text="${bankAccountNumber}"></span>
+      Płatność – przelew bankowy na konto nr PL 25 1140 2004 0000 3202 7584 2595
+      w mBank S.A., SWIFT: BREXPLPWMBK,
       <br>
-      SWIFT: <span th:if="${swift != null and !#strings.isEmpty(swift)}"
-                     th:text="${swift}"></span>
-      <br>
-      Płatność w terminie do <span th:text="${paymentDate}"></span>
+      w terminie do <span th:text="${paymentDate}"></span>.
     </p>
     <br>
     <br>
@@ -313,6 +375,34 @@
             <span>Pobierz</span>
           </button>
         </form>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="footer-col left">
+        <p>PiEngineer</p>
+        <p>Przemysław Piechota</p>
+        <p>Ul. Niciarniana 45</p>
+        <p>92-320 Łódź</p>
+      </div>
+
+      <div class="footer-col">
+        <p>Regon: 362358675</p>
+        <p>nipBuyer: 726-108-80-84</p>
+        <p>VAT-UE PL 726-108-80-84</p>
+      </div>
+
+      <div class="footer-col">
+        <p>Telefon: +48 66 4848488</p>
+        <p>Telefax:</p>
+        <p>Internet: przemyslaw.piechota@wp.pl</p>
+      </div>
+
+      <div class="footer-col">
+        <p>mBank S.A.</p>
+        <p>SWIFT (BIC): BREXPLPWMBK</p>
+        <p>IBAN (PLN): PL25 1140 2004 0000 3202 7584 2595</p>
+        <p>IBAN (EUR):</p>
       </div>
     </div>
   </div>

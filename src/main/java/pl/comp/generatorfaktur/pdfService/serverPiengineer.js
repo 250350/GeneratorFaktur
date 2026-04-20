@@ -86,7 +86,7 @@ app.post("/pdf", async (req, res) => {
                   <!-- KOLUMNA 2 -->
                   <div style="width: 23%; text-align: left;">
                     <div>Regon: 362358675</div>
-                    <div>NIP: 726-108-80-84</div>
+                    <div>nipBuyer: 726-108-80-84</div>
                     <div>VAT-UE PL 726-108-80-84</div>
                   </div>
 

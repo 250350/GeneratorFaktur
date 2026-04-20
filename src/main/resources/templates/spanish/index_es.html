@@ -67,6 +67,10 @@
             background: #0056b3;
         }
 
+        .text-middle{
+            text-align: center;
+        }
+
     </style>
 </head>
 <body>
@@ -75,17 +79,35 @@
     <h2>Generador de Facturas</h2>
 
     <form action="/show-invoice" method="get">
-        <label for="companyName">Nombre de la empresa:</label>
-        <input id="companyName" name="companyName" placeholder="Ej. Empresa S.L.">
 
-        <label for="address">Dirección:</label>
-        <input id="address" name="address" placeholder="Calle Mayor 5">
+        <label class="text-middle">Datos del emisor</label>
+        <label for="companyNameSeller">Nombre de la empresa:</label>
+        <input id="companyNameSeller" name="companyNameSeller" placeholder="Ej. Empresa S.L.">
 
-        <label for="postalCodeAndCity">Código postal y ciudad:</label>
-        <input id="postalCodeAndCity" name="postalCodeAndCity" placeholder="28001 Madrid">
+        <label for="addressSeller">Dirección:</label>
+        <input id="addressSeller" name="addressSeller" placeholder="Calle Mayor 5">
 
-        <label for="nip">NIF / NIE / CIF:</label>
-        <input id="nip" name="nip" type="text"
+        <label for="postalCodeAndCitySeller">Código postal y ciudad:</label>
+        <input id="postalCodeAndCitySeller" name="postalCodeAndCitySeller" placeholder="28001 Madrid">
+
+        <label for="nipSeller">NIF / NIE / CIF:</label>
+        <input id="nipSeller" name="nipSeller" type="text"
+               placeholder="12345678Z / X1234567L / B12345678"
+               maxlength="9"
+               required>
+
+        <label class="text-middle">Datos del cliente:</label>
+        <label for="companyNameBuyer">Nombre de la empresa:</label>
+        <input id="companyNameBuyer" name="companyNameBuyer" placeholder="Ej. Empresa S.L.">
+
+        <label for="addressBuyer">Dirección:</label>
+        <input id="addressBuyer" name="addressBuyer" placeholder="Calle Mayor 5">
+
+        <label for="postalCodeAndCityBuyer">Código postal y ciudad:</label>
+        <input id="postalCodeAndCityBuyer" name="postalCodeAndCityBuyer" placeholder="28001 Madrid">
+
+        <label for="nipBuyer">NIF / NIE / CIF:</label>
+        <input id="nipBuyer" name="nipBuyer" type="text"
                placeholder="12345678Z / X1234567L / B12345678"
                maxlength="9"
                required>
@@ -115,7 +137,8 @@
         <input type="number" id="invoiceNumber" name="invoiceNumber">
 
         <label for="completionOfServiceDate">Fecha del servicio:</label>
-        <input type="date" id="completionOfServiceDate" name="completionOfServiceDate">
+        <input type="date" pattern="dd/MM/yyyy"
+               id="completionOfServiceDate" name="completionOfServiceDate">
 
         <label for="bankAccountNumber">Cuenta bancaria (IBAN):</label>
         <input type="text" id="bankAccountNumber" name="bankAccountNumber"
@@ -127,15 +150,18 @@
                pattern="[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}[A-Z0-9]{3}" maxlength="11">
 
         <label for="paymentDate">Fecha límite de pago:</label>
-        <input type="date" id="paymentDate" name="paymentDate">
+        <input type="date" pattern="dd/MM/yyyy"
+               id="paymentDate" name="paymentDate">
+
+
 
         <button type="submit">Generar factura</button>
     </form>
 </div>
 <script>
-    const nipInput = document.getElementById('nip');
+    const nipBuyerInput = document.getElementById('nipBuyer');
 
-    IMask(nipInput, {
+    IMask(nipBuyerInput, {
         mask: 'XXXXXXXXX',
 
         definitions: {

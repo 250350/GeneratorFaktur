@@ -1,31 +1,48 @@
 package pl.comp.generatorfaktur.entities;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
 public class InvoiceRequest {
 
-    @NotBlank(message = "email is mandatory")
-    private String companyName;
+    @NotBlank(message = "companyNameSeller is mandatory")
+    private String companyNameSeller;
 
-    @NotBlank(message = "address is mandatory")
-    private String address;
+    @NotBlank(message = "addressSeller is mandatory")
+    private String addressSeller;
 
-    @NotBlank(message = "postalCodeAndCity is mandatory")
-    private String postalCodeAndCity;
+    @NotBlank(message = "postalCodeAndCitySeller is mandatory")
+    private String postalCodeAndCitySeller;
+
+    @Pattern(regexp = "^([0-9]{8}[A-Z]|[A-Z][0-9]{7}[A-Z]|[A-Z][0-9]{8})$")
+    @NotBlank(message = "nipSeller is mandatory")
+    private String nipSeller;
+
+    @NotBlank(message = "companyNameBuyer is mandatory")
+    private String companyNameBuyer;
+
+    @NotBlank(message = "addressBuyer is mandatory")
+    private String addressBuyer;
+
+    @NotBlank(message = "postalCodeAndCityBuyer is mandatory")
+    private String postalCodeAndCityBuyer;
 
 //    Dla Polskiej Wersji:
-//    @Size(min = 13, max = 13, message = "NIP musi mieć dokładnie 10 cyfr")
-//    @NotBlank(message = "nip is mandatory")
-//    private String nip;
+//    @Size(min = 13, max = 13, message = "nipBuyer musi mieć dokładnie 10 cyfr")
+//    @NotBlank(message = "nipBuyer is mandatory")
+//    private String nipBuyer;
 
-    @Pattern(regexp = "[A-Z][0-9]{7}[A-Z0-9]")
-    @NotBlank(message = "nip is mandatory")
-    private String nip;
+    @Pattern(regexp = "^([0-9]{8}[A-Z]|[A-Z][0-9]{7}[A-Z]|[A-Z][0-9]{8})$")
+    @NotBlank(message = "nipBuyer is mandatory")
+    private String nipBuyer;
 
     @NotBlank(message = "stawkaVAT is mandatory")
     @NotNull
@@ -38,25 +55,26 @@ public class InvoiceRequest {
     @NotBlank
     private String bankAccountNumber;
 
-    @NotBlank
+    @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private String completionOfServiceDate;
+    private Date completionOfServiceDate;
 
     @Pattern(regexp = "^$|^[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}[A-Z0-9]{3}$")
     private String swift;
 
-    @NotBlank
-    @DateTimeFormat
-    private String paymentDate;
+    @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date paymentDate;
 
     private List<InvoiceItem> items;
 
     public void getAllFields() {
-        System.out.println("companyName: " + companyName);
-        System.out.println("address: " + address);
-        System.out.println("postalCodeAndCity: " + postalCodeAndCity);
-        System.out.println("nip: " + nip);
+        System.out.println("companyNameBuyer: " + companyNameBuyer);
+        System.out.println("addressBuyer: " + addressBuyer);
+        System.out.println("postalCodeAndCityBuyer: " + postalCodeAndCityBuyer);
+        System.out.println("nipBuyer: " + nipBuyer);
         System.out.println("stawkaVAT: " + stawkaVAT);
+        System.out.println("completionOfServiceDate: " + completionOfServiceDate);
     }
 
 }

@@ -75,17 +75,17 @@
     <h2>Generator Faktur</h2>
 
     <form action="/show-invoice" method="get">
-        <label for="companyName">Nazwa firmy:</label>
-        <input id="companyName" name="companyName" placeholder="np. Firma Sp. z o.o.">
+        <label for="companyNameBuyer">Nazwa firmy:</label>
+        <input id="companyNameBuyer" name="companyNameBuyer" placeholder="np. Firma Sp. z o.o.">
 
-        <label for="address">Adres firmy:</label>
-        <input id="address" name="address" placeholder="ul. Kwiatowa 5">
+        <label for="addressBuyer">Adres firmy:</label>
+        <input id="addressBuyer" name="addressBuyer" placeholder="ul. Kwiatowa 5">
 
-        <label for="postalCodeAndCity">Kod pocztowy i miejscowość:</label>
-        <input id="postalCodeAndCity" name="postalCodeAndCity" placeholder="00-000 Warszawa">
+        <label for="postalCodeAndCityBuyer">Kod pocztowy i miejscowość:</label>
+        <input id="postalCodeAndCityBuyer" name="postalCodeAndCityBuyer" placeholder="00-000 Warszawa">
 
-        <label for="nip">NIP:</label>
-        <input id="nip" name="nip" placeholder="123-456-78-90">
+        <label for="nipBuyer">nipBuyer:</label>
+        <input id="nipBuyer" name="nipBuyer" placeholder="123-456-78-90">
 
         <label>Produkty:</label>
 
@@ -130,7 +130,7 @@
     </form>
 </div>
 <script>
-    IMask(document.getElementById('nip'), {
+    IMask(document.getElementById('nipBuyer'), {
         mask: '000-000-00-00'
     });
         let index = 1;
