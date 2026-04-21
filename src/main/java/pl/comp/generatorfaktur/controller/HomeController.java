@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import pl.comp.generatorfaktur.entities.InvoiceItem;
@@ -41,6 +42,7 @@ public class HomeController {
     }
 
     @GetMapping("/ping")
+    @ResponseBody
     public String ping() {
         return "ok";
     }
