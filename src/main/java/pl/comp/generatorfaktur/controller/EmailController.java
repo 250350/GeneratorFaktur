@@ -19,8 +19,10 @@ public class EmailController {
 
     @PostMapping("/save-email")
     public String saveEmail(@RequestBody Map<String, String> body) {
+        System.out.println("Saving email...");
         String email = body.get("email");
         emailRepository.save(new EmailUser(email));
+        System.out.println("Saving email: " + email);
 
         return "ok";
     }

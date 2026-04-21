@@ -109,11 +109,14 @@
         Déjanos tu email y te avisamos cuando esté listo:
     </p>
 
-    <input type="email" placeholder="tu@email.com">
+    <input type="email" id="email" placeholder="tu@email.com">
 
+    <button class="btn" onclick="saveEmail()">
+        Avísame
+    </button>
     <br>
 
-    <a class="btn" href="/create-invoice">
+    <a class="btn" href="/">
         Volver al generador
     </a>
 
@@ -122,6 +125,24 @@
     </p>
 
 </div>
+<script>
+    function saveEmail() {
+        const email = document.getElementById("email").value;
 
+        fetch("/save-email", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email: email })
+        })
+            .then(res => res.text())
+            .then(data => {
+                console.log("SAVED:", data);
+                window.location.href = "/";
+            })
+            .catch(err => console.error(err));
+    }
+</script>
 </body>
 </html>
