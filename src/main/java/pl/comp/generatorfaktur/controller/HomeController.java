@@ -40,6 +40,11 @@ public class HomeController {
         this.templateEngine = templateEngine;
     }
 
+    @GetMapping("/ping")
+    public String ping() {
+        return "ok";
+    }
+
     @RequestMapping("/")
     public String index() {
         return "landingPage";
