@@ -52,6 +52,11 @@ public class HomeController {
         return "landingPage";
     }
 
+    @RequestMapping("/show-pro")
+    public String pro() {
+        return "spanish/pro";
+    }
+
     @RequestMapping("/create-invoice")
     public String createInvoice() {
         return "spanish/index_es";
