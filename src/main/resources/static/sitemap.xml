@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+    <url>
+        <loc>https://generadordefacturas.es/</loc>
+        <priority>1.0</priority>
+    </url>
+
+    <url>
+        <loc>https://generadordefacturas.es/create-invoice</loc>
+        <priority>0.9</priority>
+    </url>
+
+    <url>
+        <loc>https://generadordefacturas.es/crear-factura-online</loc>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://generadordefacturas.es/factura-autonomos-espana</loc>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://generadordefacturas.es/como-hacer-factura-espana</loc>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://generadordefacturas.es/factura-online-rapida</loc>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://generadordefacturas.es/factura-sin-registro</loc>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://generadordefacturas.es/facturas-autonomos-sin-software</loc>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://generadordefacturas.es/generador-facturas-gratis</loc>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://generadordefacturas.es/programa-facturacion-gratis</loc>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://generadordefacturas.es/factura-pdf-gratis</loc>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://generadordefacturas.es/plantilla-factura</loc>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://generadordefacturas.es/show-pro</loc>
+        <priority>0.6</priority>
+    </url>
+
+</urlset>
