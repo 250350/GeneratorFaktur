@@ -71,6 +71,10 @@
             text-align: center;
         }
 
+         .error {
+             border: 2px solid red;
+         }
+
     </style>
 </head>
 <body>
@@ -78,7 +82,7 @@
 <div class="container">
     <h2>Generador de Facturas</h2>
 
-    <form action="/show-invoice" method="get">
+    <form action="/show-invoice" th:object="${invoiceRequest}" method="post">
 
         <label class="text-middle">Datos del emisor</label>
         <label for="companyNameSeller">Nombre de la empresa:</label>
@@ -91,10 +95,15 @@
         <input id="postalCodeAndCitySeller" name="postalCodeAndCitySeller" placeholder="28001 Madrid">
 
         <label for="nipSeller">NIF / NIE / CIF:</label>
-        <input id="nipSeller" name="nipSeller" type="text"
+        <input id="nipSeller" th:field="*{nipSeller}" type="text"
                placeholder="12345678Z / X1234567L / B12345678"
                maxlength="9"
+               th:classappend="${#fields.hasErrors('nipSeller')} ? 'error'"
                required>
+        <p th:if="${#fields.hasErrors('nipSeller')}"
+           th:errors="*{nipSeller}"
+           style="color:red;">
+        </p>
 
         <label class="text-middle">Datos del cliente:</label>
         <label for="companyNameBuyer">Nombre de la empresa:</label>
@@ -107,10 +116,15 @@
         <input id="postalCodeAndCityBuyer" name="postalCodeAndCityBuyer" placeholder="28001 Madrid">
 
         <label for="nipBuyer">NIF / NIE / CIF:</label>
-        <input id="nipBuyer" name="nipBuyer" type="text"
+        <input id="nipBuyer" th:field="*{nipBuyer}" type="text"
                placeholder="12345678Z / X1234567L / B12345678"
                maxlength="9"
+               th:classappend="${#fields.hasErrors('nipBuyer')} ? 'error'"
                required>
+        <p th:if="${#fields.hasErrors('nipBuyer')}"
+           th:errors="*{nipBuyer}"
+           style="color:red;">
+        </p>
 
         <label>Productos / Servicios:</label>
 
@@ -123,8 +137,8 @@
 
             <tr>
                 <td><input name="items[0].description"></td>
-                <td><input type="number" name="items[0].amount"></td>
-                <td><input type="number" step="0.01" name="items[0].netPrice"></td>
+                <td><input type="number" name="items[0].amount" min="1" required></td>
+                <td><input type="number" step="0.01" name="items[0].netPrice" min="0.01" required></td>
             </tr>
         </table>
 

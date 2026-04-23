@@ -22,7 +22,8 @@ public class InvoiceRequest {
     @NotBlank(message = "postalCodeAndCitySeller is mandatory")
     private String postalCodeAndCitySeller;
 
-    @Pattern(regexp = "^([0-9]{8}[A-Z]|[A-Z][0-9]{7}[A-Z]|[A-Z][0-9]{8})$")
+    @Pattern(regexp = "^([0-9]{8}[A-Z]|[A-Z][0-9]{7}[A-Z]|[A-Z][0-9]{8})$",
+            message = "NIF inválido. Ejemplo: 12345678Z o X1234567L")
     @NotBlank(message = "nipSeller is mandatory")
     private String nipSeller;
 
@@ -40,7 +41,8 @@ public class InvoiceRequest {
 //    @NotBlank(message = "nipBuyer is mandatory")
 //    private String nipBuyer;
 
-    @Pattern(regexp = "^([0-9]{8}[A-Z]|[A-Z][0-9]{7}[A-Z]|[A-Z][0-9]{8})$")
+    @Pattern(regexp = "^([0-9]{8}[A-Z]|[A-Z][0-9]{7}[A-Z]|[A-Z][0-9]{8})$",
+            message = "NIF inválido. Ejemplo: 12345678Z o X1234567L")
     @NotBlank(message = "nipBuyer is mandatory")
     private String nipBuyer;
 
@@ -48,7 +50,7 @@ public class InvoiceRequest {
     @NotNull
     private String stawkaVAT;
 
-    @Min(1)
+    @Min(value = 1, message = "Minimal number of invoice is 1")
     private int invoiceNumber;
 
     @Pattern(regexp = "\\d{26}", message = "niepoprawny IBAN")
