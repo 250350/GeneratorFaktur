@@ -9,9 +9,10 @@ public class InvoiceItem {
 
     private String description;
 
-    @Min(1)
+    @Min(value = 1, message = "La cantidad debe ser al menos 1")
+    @Positive(message = "La cantidad debe ser positiva")
     private int amount;
 
-    @Positive(message = "netPrice is mandatory")
+    @Positive(message = "El precio neto tiene que ser positivo")
     private double netPrice;
 }

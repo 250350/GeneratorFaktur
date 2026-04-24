@@ -1,9 +1,6 @@
 package pl.comp.generatorfaktur.entities;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -13,27 +10,27 @@ import java.util.List;
 @Data
 public class InvoiceRequest {
 
-    @NotBlank(message = "companyNameSeller is mandatory")
+    @NotBlank(message = "Nombre de empresa es obligatoria")
     private String companyNameSeller;
 
-    @NotBlank(message = "addressSeller is mandatory")
+    @NotBlank(message = "La dirección es obligatoria")
     private String addressSeller;
 
-    @NotBlank(message = "postalCodeAndCitySeller is mandatory")
+    @NotBlank(message = "Código postal y ciudad es obligatoria")
     private String postalCodeAndCitySeller;
 
     @Pattern(regexp = "^([0-9]{8}[A-Z]|[A-Z][0-9]{7}[A-Z]|[A-Z][0-9]{8})$",
             message = "NIF inválido. Ejemplo: 12345678Z o X1234567L")
-    @NotBlank(message = "nipSeller is mandatory")
+    @NotBlank(message = "NIF es obligatoria")
     private String nipSeller;
 
-    @NotBlank(message = "companyNameBuyer is mandatory")
+    @NotBlank(message = "Nombre de empresa es obligatoria")
     private String companyNameBuyer;
 
-    @NotBlank(message = "addressBuyer is mandatory")
+    @NotBlank(message = "La dirección es obligatoria")
     private String addressBuyer;
 
-    @NotBlank(message = "postalCodeAndCityBuyer is mandatory")
+    @NotBlank(message = "Código postal y ciudad es obligatoria")
     private String postalCodeAndCityBuyer;
 
 //    Dla Polskiej Wersji:
@@ -43,28 +40,30 @@ public class InvoiceRequest {
 
     @Pattern(regexp = "^([0-9]{8}[A-Z]|[A-Z][0-9]{7}[A-Z]|[A-Z][0-9]{8})$",
             message = "NIF inválido. Ejemplo: 12345678Z o X1234567L")
-    @NotBlank(message = "nipBuyer is mandatory")
+    @NotBlank(message = "NIF es obligatoria")
     private String nipBuyer;
 
-    @NotBlank(message = "stawkaVAT is mandatory")
-    @NotNull
+    @NotBlank(message = "IVA es obligatoria")
+    @NotNull(message = "IVA es obligatoria")
     private String stawkaVAT;
 
-    @Min(value = 1, message = "Minimal number of invoice is 1")
+    @Min(value = 1, message = "El número mínimo de facturas es 1")
+    @Positive(message = "El número de factura debe ser positivo")
     private int invoiceNumber;
 
-    @Pattern(regexp = "\\d{26}", message = "niepoprawny IBAN")
-    @NotBlank
+    @Pattern(regexp = "\\d{26}", message = "IBAN incorrecto")
+    @NotBlank(message = "IBAN es obligatoria")
     private String bankAccountNumber;
 
-    @NotNull
+    @NotNull(message = "La fecha es obligatoria")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date completionOfServiceDate;
 
-    @Pattern(regexp = "^$|^[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}[A-Z0-9]{3}$")
+    @Pattern(regexp = "^$|^[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}[A-Z0-9]{3}$",
+            message = "SWIFT incorrecto")
     private String swift;
 
-    @NotNull
+    @NotNull(message = "La fecha es obligatoria")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date paymentDate;
 

@@ -86,13 +86,29 @@
 
         <label class="text-middle">Datos del emisor</label>
         <label for="companyNameSeller">Nombre de la empresa:</label>
-        <input id="companyNameSeller" name="companyNameSeller" placeholder="Ej. Empresa S.L.">
+        <input id="companyNameSeller" th:feild="*{companyNameSeller}"
+               placeholder="Ej. Empresa S.L."
+               th:classappend="${#fields.hasErrors('companyNameSeller')} ? 'error'">
+        <p th:if="${#fields.hasErrors('companyNameSeller')} ? 'error'"
+           th:errors="*{companyNameSeller}"
+           style="color:red;">
+        </p>
 
         <label for="addressSeller">Dirección:</label>
-        <input id="addressSeller" name="addressSeller" placeholder="Calle Mayor 5">
+        <input id="addressSeller" th:field="*{addressSeller}" placeholder="Calle Mayor 5"
+               th:classappend="${#fields.hasErrors('addressSeller')} ? 'error'">
+        <p th:if="${#fields.hasErrors('addressSeller')} ? 'error'"
+           th:errors="*{addressSeller}"
+           style="color: red;">
+        </p>
 
         <label for="postalCodeAndCitySeller">Código postal y ciudad:</label>
-        <input id="postalCodeAndCitySeller" name="postalCodeAndCitySeller" placeholder="28001 Madrid">
+        <input id="postalCodeAndCitySeller" th:field="*{postalCodeAndCitySeller}" placeholder="28001 Madrid"
+               th:classappend="${#fields.hasErrors('postalCodeAndCitySeller')} ? 'error'">
+        <p th:if="${#fields.hasErrors('postalCodeAndCitySeller')} ? 'error'"
+           th:errors="*{postalCodeAndCitySeller}"
+           style="color: red;">
+        </p>
 
         <label for="nipSeller">NIF / NIE / CIF:</label>
         <input id="nipSeller" th:field="*{nipSeller}" type="text"
@@ -107,13 +123,28 @@
 
         <label class="text-middle">Datos del cliente:</label>
         <label for="companyNameBuyer">Nombre de la empresa:</label>
-        <input id="companyNameBuyer" name="companyNameBuyer" placeholder="Ej. Empresa S.L.">
+        <input id="companyNameBuyer" th:field="*{companyNameBuyer}" placeholder="Ej. Empresa S.L."
+               th:classappend="${#fields.hasErrors('companyNameBuyer')} ? 'error'">
+        <p th:if="${#fields.hasErrors('companyNameBuyer')} ? 'error'"
+           th:errors="*{companyNameBuyer}"
+           style="color:red;">
+        </p>>
 
         <label for="addressBuyer">Dirección:</label>
-        <input id="addressBuyer" name="addressBuyer" placeholder="Calle Mayor 5">
+        <input id="addressBuyer" th:field="*{addressBuyer}" placeholder="Calle Mayor 5"
+               th:classappend="${#fields.hasErrors('addressBuyer')} ? 'error'">
+        <p th:if="${#fields.hasErrors('addressBuyer')} ? 'error'"
+           th:errors="*{addressBuyer}"
+           style="color: red;">
+        </p>>
 
         <label for="postalCodeAndCityBuyer">Código postal y ciudad:</label>
-        <input id="postalCodeAndCityBuyer" name="postalCodeAndCityBuyer" placeholder="28001 Madrid">
+        <input id="postalCodeAndCityBuyer" th:field="*{postalCodeAndCityBuyer}" placeholder="28001 Madrid"
+               th:classappend="${#fields.hasErrors('postalCodeAndCityBuyer')} ? 'error'">
+        <p th:if="${#fields.hasErrors('postalCodeAndCityBuyer')} ? 'error'"
+           th:errors="*{postalCodeAndCityBuyer}"
+           style="color: red;">
+        </p>>
 
         <label for="nipBuyer">NIF / NIE / CIF:</label>
         <input id="nipBuyer" th:field="*{nipBuyer}" type="text"
