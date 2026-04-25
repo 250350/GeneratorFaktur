@@ -128,7 +128,7 @@
         <p th:if="${#fields.hasErrors('companyNameBuyer')} ? 'error'"
            th:errors="*{companyNameBuyer}"
            style="color:red;">
-        </p>>
+        </p>
 
         <label for="addressBuyer">Dirección:</label>
         <input id="addressBuyer" th:field="*{addressBuyer}" placeholder="Calle Mayor 5"
@@ -136,7 +136,7 @@
         <p th:if="${#fields.hasErrors('addressBuyer')} ? 'error'"
            th:errors="*{addressBuyer}"
            style="color: red;">
-        </p>>
+        </p>
 
         <label for="postalCodeAndCityBuyer">Código postal y ciudad:</label>
         <input id="postalCodeAndCityBuyer" th:field="*{postalCodeAndCityBuyer}" placeholder="28001 Madrid"
@@ -144,7 +144,7 @@
         <p th:if="${#fields.hasErrors('postalCodeAndCityBuyer')} ? 'error'"
            th:errors="*{postalCodeAndCityBuyer}"
            style="color: red;">
-        </p>>
+        </p>
 
         <label for="nipBuyer">NIF / NIE / CIF:</label>
         <input id="nipBuyer" th:field="*{nipBuyer}" type="text"
@@ -176,27 +176,58 @@
         <button type="button" onclick="addRow()">➕ Añadir producto</button>
 
         <label for="stawkaVAT">IVA (%):</label>
-        <input type="number" id="stawkaVAT" name="stawkaVAT" placeholder="21">
+        <input type="number" id="stawkaVAT" th:field="*{stawkaVAT}"
+               value="21" placeholder="21"
+               th:classappend="${#fields.hasErrors('stawkaVAT')} ? 'error'">
+        <p th:if="${#fields.hasErrors('stawkaVAT')} ? 'error'"
+           th:errors="*{stawkaVAT}"
+           style="color: red;">
+        </p>
 
         <label for="invoiceNumber">Número de factura:</label>
-        <input type="number" id="invoiceNumber" name="invoiceNumber">
+        <input type="number" id="invoiceNumber" th:field="*{invoiceNumber}"
+               th:classappend="${#fields.hasErrors('invoiceNumber')} ? 'error'">
+        <p th:if="${#fields.hasErrors('invoiceNumber')} ? 'error'"
+           th:errors="*{invoiceNumber}"
+           style="color: red;">
+        </p>
 
         <label for="completionOfServiceDate">Fecha del servicio:</label>
         <input type="date" pattern="dd/MM/yyyy"
-               id="completionOfServiceDate" name="completionOfServiceDate">
+               id="completionOfServiceDate" th:field="*{completionOfServiceDate}"
+               th:classappend="${#fields.hasErrors('completionOfServiceDate')} ? 'error'">
+        <p th:if="${#fields.hasErrors('completionOfServiceDate')} ? 'error'"
+           th:errors="*{completionOfServiceDate}"
+           style="color: red;">
+        </p>
 
         <label for="bankAccountNumber">Cuenta bancaria (IBAN):</label>
-        <input type="text" id="bankAccountNumber" name="bankAccountNumber"
+        <input type="text" id="bankAccountNumber" th:field="*{bankAccountNumber}"
                pattern="\d{1,26}" maxlength="26" inputmode="numeric"
-               placeholder="Máx. 26 dígitos">
+               placeholder="Máx. 26 dígitos"
+               th:classappend="${#fields.hasErrors('bankAccountNumber')} ? 'error'">
+        <p th:if="${#fields.hasErrors('bankAccountNumber')} ? 'error'"
+           th:errors="*{bankAccountNumber}"
+           style="color: red;">
+        </p>
 
         <label for="swift">SWIFT / BIC:</label>
-        <input type="text" id="swift" name="swift"
-               pattern="[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}[A-Z0-9]{3}" maxlength="11">
+        <input type="text" id="swift" th:field="*{swift}"
+               pattern="[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}[A-Z0-9]{3}" maxlength="11"
+               th:classappend="${#fields.hasErrors('swift')} ? 'error'">
+        <p th:if="${#fields.hasErrors('swift')} ? 'error'"
+           th:errors="*{swift}"
+           style="color: red;">
+        </p>
 
         <label for="paymentDate">Fecha límite de pago:</label>
         <input type="date" pattern="dd/MM/yyyy"
-               id="paymentDate" name="paymentDate">
+               id="paymentDate" th:field="*{paymentDate}"
+               th:classappend="${#fields.hasErrors('paymentDate')} ? 'error'">
+        <p th:if="${#fields.hasErrors('paymentDate')} ? 'error'"
+           th:errors="*{paymentDate}"
+           style="color: red;">
+        </p>
 
 
 

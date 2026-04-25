@@ -56,7 +56,9 @@
     
         @GetMapping("/create-invoice")
         public String createInvoice(Model model) {
-            model.addAttribute("invoiceRequest", new InvoiceRequest());
+            InvoiceRequest invoiceRequest = new InvoiceRequest();
+            invoiceRequest.setStawkaVAT("21");
+            model.addAttribute("invoiceRequest", invoiceRequest);
             return "spanish/index_es";
         }
     
