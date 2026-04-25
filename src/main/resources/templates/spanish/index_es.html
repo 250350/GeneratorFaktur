@@ -86,7 +86,7 @@
 
         <label class="text-middle">Datos del emisor</label>
         <label for="companyNameSeller">Nombre de la empresa:</label>
-        <input id="companyNameSeller" th:feild="*{companyNameSeller}"
+        <input id="companyNameSeller" th:field="*{companyNameSeller}"
                placeholder="Ej. Empresa S.L."
                th:classappend="${#fields.hasErrors('companyNameSeller')} ? 'error'">
         <p th:if="${#fields.hasErrors('companyNameSeller')} ? 'error'"
