@@ -230,21 +230,26 @@
         <th>Base imponible</th>
         <th>IVA</th>
         <th>Importe IVA</th>
+        <th>IRPF</th>
+        <th>Importe IRPF</th>
         <th>Total</th>
       </tr>
       </thead>
 
       <tbody>
       <tr th:each="item, iterStat : ${items}">
-        <td th:text="${iterStat.index + 1}"></td> <!-- Lp -->
+        <td th:text="${iterStat.index + 1}"></td>
         <td th:text="${item.description}"></td>
         <td th:text="${item.amount}"></td>
-        <td th:text="${#numbers.formatDecimal(item.netPrice, 1, 2)} + ' €'"></td>
-        <td th:text="${#numbers.formatDecimal(item.netPrice * item.amount, 1, 2)} + ' €'"></td>
-        <td th:text="${#numbers.formatDecimal(stawkaVAT * 100.0, 0, 0)} + '%'"></td>
-        <td th:text="${#numbers.formatDecimal((item.netPrice * item.amount) * stawkaVAT, 1, 2)} + ' €'"></td>
+        <td th:text="${#numbers.formatDecimal(item.netPrice, 1, 2, 'POINT')} + ' €'"></td>
+        <td th:text="${#numbers.formatDecimal(item.netPrice * item.amount, 1, 2, 'POINT')} + ' €'"></td>
+        <td th:text="${#numbers.formatDecimal(stawkaVAT * 100.0, 0, 0, 'POINT')} + '%'"></td>
+        <td th:text="${#numbers.formatDecimal((item.netPrice * item.amount) * stawkaVAT, 1, 2, 'POINT')} + ' €'"></td>
+        <td th:text="${#numbers.formatDecimal(irpfRate, 0, 0, 'POINT')} + '%'"></td>
+        <td th:text="${#numbers.formatDecimal((item.netPrice * item.amount) * (irpfRate / 100.0), 1, 2, 'POINT')} + ' €'"></td>
         <td class="nowrap"
-                th:text="${#numbers.formatDecimal((item.netPrice * item.amount) * (1 + stawkaVAT), 1, 2)} + ' €'"></td>
+            th:text="${#numbers.formatDecimal((item.netPrice * item.amount) * (1 + stawkaVAT - (irpfRate / 100.0)), 1, 2, 'POINT')} + ' €'">
+        </td>
       </tr>
 
       <tr>
@@ -252,10 +257,12 @@
         <td></td>
         <td></td>
         <td class="text-bold">Subtotal:</td>
-        <td class="text-bold"><span th:text="${netPrice}"></span> €</td>
+        <td class="text-bold"><span th:text="${#strings.replace(netPrice, ',', '.')}"></span> €</td>
         <td></td>
-        <td class="text-bold"><span th:text="${vatValue}"></span> €</td>
-        <td class="text-bold"><span th:text="${grossPrice}"></span> €</td>
+        <td class="text-bold"><span th:text="${#strings.replace(vatValue, ',', '.')}"></span> €</td>
+        <td></td>
+        <td class="text-bold"><span th:text="${#numbers.formatDecimal(irpfValue, 1, 2, 'POINT')}"></span> €</td>
+        <td class="text-bold"><span th:text="${#strings.replace(grossPrice, ',', '.')}"></span> €</td>
       </tr>
       </tbody>
     </table>
@@ -263,12 +270,9 @@
     <br>
 
     <!-- ===== SUMMARY ===== -->
-    <p><strong>Total a pagar: <span th:text="${grossPrice}"></span> €</strong></p>
+    <p><strong>Total a pagar: <span th:text="${#strings.replace(grossPrice, ',', '.')}"></span> €</strong></p>
 
     <div class="line"></div>
-
-<!--    <p>Słownie: sześćset siedemdziesiąt złoty i 35 groszy</p>-->
-
     <br>
     <br>
     <p>
@@ -281,22 +285,6 @@
     </p>
     <br>
     <br>
-
-    <!-- ===== SIGNATURES ===== -->
-<!--    <table class="signature-table">-->
-<!--      <tr>-->
-<!--        <td>-->
-<!--          <p>………………………….</p>-->
-<!--          <p>Firma del emisor</p>-->
-<!--        </td>-->
-
-<!--        <td>-->
-<!--          <p>………………………….</p>-->
-<!--          <p>Firma del cliente</p>-->
-<!--        </td>-->
-<!--      </tr>-->
-<!--    </table>-->
-
     <div class="text-center">
       <div class="invoice-btns">
         <button type="button"

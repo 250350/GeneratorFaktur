@@ -166,15 +166,12 @@
     <!-- ===== INFO ===== -->
     <p class="right text-small">Fecha de emisión: <span th:text="${#temporals.format(today, 'dd/MM/yyyy')}"></span> </p>
     <p class="right text-small">Fecha del servicio: <span th:text="${#dates.format(completionOfServiceDate, 'dd/MM/yyyy')}"></span></p>
-
     <br>
     <br>
-    <p class="title center">FACTURA Nº <span th:text="${invoiceNumber}"></span>/<span th:text="${#temporals.format(today, 'yyyy')}"></span></p>
-
+    <p class="title center">FACTURA Nº
+      <span th:text="${invoiceNumber}"></span>/<span th:text="${#temporals.format(today, 'yyyy')}"></span></p>
     <br>
     <br>
-<!--    <p class="text-middle">Zamówienie z dnia 31.01.2024 nr 92910-24-01-18</p>-->
-<!--    <br>-->
 
     <!-- ===== MAIN TABLE ===== -->
     <table class="main-table">
@@ -187,21 +184,26 @@
         <th>Base imponible</th>
         <th>IVA</th>
         <th>Importe IVA</th>
+        <th>IRPF</th>
+        <th>Importe IRPF</th>
         <th>Total</th>
       </tr>
       </thead>
 
       <tbody>
       <tr th:each="item, iterStat : ${items}">
-        <td th:text="${iterStat.index + 1}"></td> <!-- Lp -->
+        <td th:text="${iterStat.index + 1}"></td>
         <td th:text="${item.description}"></td>
         <td th:text="${item.amount}"></td>
-        <td th:text="${#numbers.formatDecimal(item.netPrice, 1, 2)} + ' €'"></td>
-        <td th:text="${#numbers.formatDecimal(item.netPrice * item.amount, 1, 2)} + ' €'"></td>
-        <td th:text="${#numbers.formatDecimal(stawkaVAT * 100.0, 0, 0)} + '%'"></td>
-        <td th:text="${#numbers.formatDecimal((item.netPrice * item.amount) * stawkaVAT, 1, 2)} + ' €'"></td>
+        <td th:text="${#numbers.formatDecimal(item.netPrice, 1, 2, 'POINT')} + ' €'"></td>
+        <td th:text="${#numbers.formatDecimal(item.netPrice * item.amount, 1, 2, 'POINT')} + ' €'"></td>
+        <td th:text="${#numbers.formatDecimal(stawkaVAT * 100.0, 0, 0, 'POINT')} + '%'"></td>
+        <td th:text="${#numbers.formatDecimal((item.netPrice * item.amount) * stawkaVAT, 1, 2, 'POINT')} + ' €'"></td>
+        <td th:text="${#numbers.formatDecimal(irpfRate, 0, 0, 'POINT')} + '%'"></td>
+        <td th:text="${#numbers.formatDecimal((item.netPrice * item.amount) * (irpfRate / 100.0), 1, 2, 'POINT')} + ' €'"></td>
         <td class="nowrap"
-                th:text="${#numbers.formatDecimal((item.netPrice * item.amount) * (1 + stawkaVAT), 1, 2)} + ' €'"></td>
+            th:text="${#numbers.formatDecimal((item.netPrice * item.amount) * (1 + stawkaVAT - (irpfRate / 100.0)), 1, 2, 'POINT')} + ' €'">
+        </td>
       </tr>
 
       <tr>
@@ -209,22 +211,21 @@
         <td></td>
         <td></td>
         <td class="text-bold">Subtotal:</td>
-        <td class="text-bold"><span th:text="${netPrice}"></span> €</td>
+        <td class="text-bold"><span th:text="${#strings.replace(netPrice, ',', '.')}"></span> €</td>
         <td></td>
-        <td class="text-bold"><span th:text="${vatValue}"></span> €</td>
-        <td class="text-bold"><span th:text="${grossPrice}"></span> €</td>
+        <td class="text-bold"><span th:text="${#strings.replace(vatValue, ',', '.')}"></span> €</td>
+        <td></td>
+        <td class="text-bold"><span th:text="${#numbers.formatDecimal(irpfValue, 1, 2, 'POINT')}"></span> €</td>
+        <td class="text-bold"><span th:text="${#strings.replace(grossPrice, ',', '.')}"></span> €</td>
       </tr>
       </tbody>
     </table>
     <br>
 
     <!-- ===== SUMMARY ===== -->
-    <p><strong>Total a pagar: <span th:text="${grossPrice}"></span> €</strong></p>
+    <p><strong>Total a pagar: <span th:text="${#strings.replace(grossPrice, ',', '.')}"></span> €</strong></p>
 
     <div class="line"></div>
-
-<!--    <p>Słownie: sześćset siedemdziesiąt złoty i 35 groszy</p>-->
-
     <br>
     <p class="text-small">
       Pago por transferencia bancaria a la cuenta: <span th:text="${bankAccountNumber}"></span>
@@ -234,21 +235,6 @@
       <br>
       Fecha límite de pago: <span th:text="${#dates.format(paymentDate, 'dd/MM/yyyy')}"></span>
     </p>
-
-    <!-- ===== SIGNATURES ===== -->
-<!--    <table class="signature-table">-->
-<!--      <tr>-->
-<!--        <td>-->
-<!--          <p>………………………….</p>-->
-<!--          <p>Firma del emisor</p>-->
-<!--        </td>-->
-
-<!--        <td>-->
-<!--          <p>………………………….</p>-->
-<!--          <p>Firma del cliente</p>-->
-<!--        </td>-->
-<!--      </tr>-->
-<!--    </table>-->
   </div>
 </div>
 </body>

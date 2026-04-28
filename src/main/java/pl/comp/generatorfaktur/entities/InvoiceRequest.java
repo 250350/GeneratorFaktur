@@ -47,6 +47,9 @@ public class InvoiceRequest {
     @NotNull(message = "IVA es obligatoria")
     private String stawkaVAT;
 
+    @NotNull
+    private double irpf;
+
     @Min(value = 1, message = "El número mínimo de facturas es 1")
     @Positive(message = "El número de factura debe ser positivo")
     private int invoiceNumber;

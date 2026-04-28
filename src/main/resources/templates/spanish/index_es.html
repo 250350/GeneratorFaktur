@@ -175,7 +175,7 @@
 
         <button type="button" onclick="addRow()">➕ Añadir producto</button>
 
-        <label for="stawkaVAT">IVA (%):</label>
+        <label for="stawkaVAT">IVA (%) – se añade:</label>
         <input type="number" id="stawkaVAT" th:field="*{stawkaVAT}"
                value="21" placeholder="21"
                th:classappend="${#fields.hasErrors('stawkaVAT')} ? 'error'">
@@ -183,6 +183,13 @@
            th:errors="*{stawkaVAT}"
            style="color: red;">
         </p>
+
+        <label for="irpf">IRPF (%) – se resta:</label>
+        <select id="irpf" name="irpf">
+            <option value="0">0% (sin retención)</option>
+            <option value="7">7% (nuevos autónomos)</option>
+            <option value="15" selected>15% (estándar)</option>
+        </select>
 
         <label for="invoiceNumber">Número de factura:</label>
         <input type="number" id="invoiceNumber" th:field="*{invoiceNumber}"
