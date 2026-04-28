@@ -48,6 +48,16 @@
         public String index() {
             return "landingPage";
         }
+
+        @GetMapping("/politica-privacidad")
+        public String privacy() {
+            return "spanish/politica-privacidad";
+        }
+
+        @GetMapping("/aviso-legal")
+        public String legal() {
+            return "spanish/aviso-legal";
+        }
     
         @RequestMapping("/show-pro")
         public String pro() {
