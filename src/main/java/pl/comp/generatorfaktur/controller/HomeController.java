@@ -120,6 +120,7 @@
             session.setAttribute("stawkaVAT", vat);
             session.setAttribute("irpfRate", invoiceRequest.getIrpf());
             session.setAttribute("irpfValue", irpfValue);
+            session.setAttribute("applyIRPF", invoiceRequest.isApplyIRPF());
             session.setAttribute("vatValue", vatValue);
             session.setAttribute("grossPrice", grossPrice);
             session.setAttribute("netPrice", totalNet);
@@ -148,6 +149,7 @@
             model.addAttribute("stawkaVAT", vat);
             model.addAttribute("irpfRate", invoiceRequest.getIrpf());
             model.addAttribute("irpfValue", irpfValue);
+            model.addAttribute("applyIRPF", invoiceRequest.isApplyIRPF());
             model.addAttribute("completionOfServiceDate", invoiceRequest.getCompletionOfServiceDate());
             model.addAttribute("today", LocalDate.now());
             model.addAttribute("invoiceNumber", invoiceRequest.getInvoiceNumber());
@@ -189,6 +191,8 @@
 
         Double irpfValueObj = (Double) session.getAttribute("irpfValue");
         double irpfValue = irpfValueObj != null ? irpfValueObj : 0.0;
+
+        boolean applyIRPF = (boolean) session.getAttribute("applyIRPF");
     
         Double vatValueObj = (Double) session.getAttribute("vatValue");
         double vatValue = vatValueObj != null ? vatValueObj : 0.0;
@@ -214,6 +218,7 @@
         context.setVariable("stawkaVAT", stawkaVAT);
         context.setVariable("irpfRate", irpfRate);
         context.setVariable("irpfValue", irpfValue);
+        context.setVariable("applyIRPF", applyIRPF);
         context.setVariable("vatValue", String.format("%.2f", vatValue));
         context.setVariable("grossPrice", String.format("%.2f", grossPrice));
         context.setVariable("completionOfServiceDate", completionOfServiceDate);

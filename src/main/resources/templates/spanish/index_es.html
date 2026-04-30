@@ -71,6 +71,11 @@
             text-align: center;
         }
 
+        .checkbox{
+            display: flex;
+            align-items: center;
+        }
+
          .error {
              border: 2px solid red;
          }
@@ -184,6 +189,11 @@
            style="color: red;">
         </p>
 
+        <label for="applyIRPF" class="checkbox">Apply IRPF:
+            <input type="checkbox" role="switch"
+                   id="applyIRPF" th:field="*{applyIRPF}">
+        </label>
+
         <label for="irpf">IRPF (%) – se resta:</label>
         <select id="irpf" name="irpf">
             <option value="0">0% (sin retención)</option>
@@ -250,6 +260,23 @@
     </form>
 </div>
 <script>
+    //disable IRPF
+    const checkbox = document.getElementById('applyIRPF')
+    const select = document.getElementById('irpf')
+    function updateIRPF() {
+        // if(checkbox.checked) {
+        //     select.disabled = false;
+        // } else {
+        //     select.disabled = true;
+        // }
+
+        select.disabled = !checkbox.checked;
+    }
+
+    updateIRPF();
+    checkbox.addEventListener("change", updateIRPF);
+
+    //nipBuyer format
     const nipBuyerInput = document.getElementById('nipBuyer');
 
     IMask(nipBuyerInput, {

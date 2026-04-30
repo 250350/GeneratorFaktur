@@ -184,8 +184,8 @@
         <th>Base imponible</th>
         <th>IVA</th>
         <th>Importe IVA</th>
-        <th>IRPF</th>
-        <th>Importe IRPF</th>
+        <th th:if="${applyIRPF}">IRPF</th>
+        <th th:if="${applyIRPF}">Importe IRPF</th>
         <th>Total</th>
       </tr>
       </thead>
@@ -199,8 +199,8 @@
         <td th:text="${#numbers.formatDecimal(item.netPrice * item.amount, 1, 2, 'POINT')} + ' €'"></td>
         <td th:text="${#numbers.formatDecimal(stawkaVAT * 100.0, 0, 0, 'POINT')} + '%'"></td>
         <td th:text="${#numbers.formatDecimal((item.netPrice * item.amount) * stawkaVAT, 1, 2, 'POINT')} + ' €'"></td>
-        <td th:text="${#numbers.formatDecimal(irpfRate, 0, 0, 'POINT')} + '%'"></td>
-        <td th:text="${#numbers.formatDecimal((item.netPrice * item.amount) * (irpfRate / 100.0), 1, 2, 'POINT')} + ' €'"></td>
+        <td th:if="${applyIRPF}" th:text="${#numbers.formatDecimal(irpfRate, 0, 0, 'POINT')} + '%'"></td>
+        <td th:if="${applyIRPF}" th:text="${#numbers.formatDecimal((item.netPrice * item.amount) * (irpfRate / 100.0), 1, 2, 'POINT')} + ' €'"></td>
         <td class="nowrap"
             th:text="${#numbers.formatDecimal((item.netPrice * item.amount) * (1 + stawkaVAT - (irpfRate / 100.0)), 1, 2, 'POINT')} + ' €'">
         </td>
@@ -210,13 +210,14 @@
         <td></td>
         <td></td>
         <td></td>
-        <td class="text-bold">Subtotal:</td>
-        <td class="text-bold"><span th:text="${#strings.replace(netPrice, ',', '.')}"></span> €</td>
-        <td></td>
-        <td class="text-bold"><span th:text="${#strings.replace(vatValue, ',', '.')}"></span> €</td>
-        <td></td>
-        <td class="text-bold"><span th:text="${#numbers.formatDecimal(irpfValue, 1, 2, 'POINT')}"></span> €</td>
-        <td class="text-bold"><span th:text="${#strings.replace(grossPrice, ',', '.')}"></span> €</td>
+        <td><strong>Subtotal:</strong></td>
+        <td><strong><span th:text="${#strings.replace(netPrice, ',', '.')}"></span> €</strong></td>
+        <td th:if="${!applyIRPF}"></td>
+        <td th:if="${applyIRPF}"></td>
+        <td><strong><span th:text="${#strings.replace(vatValue, ',', '.')}"></span> €</strong></td>
+        <td th:if="${applyIRPF}"></td>
+        <td th:if="${applyIRPF}"><strong><span th:text="${#numbers.formatDecimal(irpfValue, 1, 2, 'POINT')}"></span> €</strong></td>
+        <td><strong><span th:text="${#strings.replace(grossPrice, ',', '.')}"></span> €</strong></td>
       </tr>
       </tbody>
     </table>

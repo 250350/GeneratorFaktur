@@ -48,7 +48,9 @@ public class InvoiceRequest {
     private String stawkaVAT;
 
     @NotNull
-    private double irpf;
+    private double irpf = 0.0;
+
+    private boolean applyIRPF = true;
 
     @Min(value = 1, message = "El número mínimo de facturas es 1")
     @Positive(message = "El número de factura debe ser positivo")
