@@ -2,8 +2,9 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <title>Generator Faktur</title>
+    <th:block th:replace="fragments/head :: defaultHead"></th:block>
+        <meta charset="UTF-8" />
+        <title>Generator Faktur</title>
 </head>
 <body>
 <div class="invoice-wrapper" id="print-area">
