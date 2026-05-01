@@ -1,5 +1,5 @@
     package pl.comp.generatorfaktur.controller;
-    
+
     import jakarta.servlet.http.HttpSession;
     import jakarta.validation.Valid;
     import org.springframework.http.MediaType;
@@ -12,8 +12,9 @@
     import org.thymeleaf.context.Context;
     import pl.comp.generatorfaktur.entities.InvoiceItem;
     import pl.comp.generatorfaktur.entities.InvoiceRequest;
+    import pl.comp.generatorfaktur.model.nifVerification;
     import tools.jackson.databind.ObjectMapper;
-    
+
     import java.io.InputStream;
     import java.net.URI;
     import java.net.http.HttpClient;
@@ -25,7 +26,7 @@
     import java.util.Date;
     import java.util.List;
     import java.util.Map;
-    
+
     @Controller
     public class HomeController {
         private final TemplateEngine templateEngine;
@@ -86,13 +87,20 @@
                 System.out.println(result.getAllErrors());
                 return "spanish/index_es";
             }
-    //        setVAT(invoiceRequest.getStawkaVAT());
-    //        double netPriceForOne = invoiceRequest.getNetPrice();
-    //        netPrice = invoiceRequest.getNetPrice();
-    //        setNetPrice(calculateNetPrice(netPrice, invoiceRequest.getAmount()));
-    //        invoiceRequest.setNetPrice(netPrice);
-    //        setVatValue(calculateValueVAT(invoiceRequest.getNetPrice()));
-    //        setGrossPrice(calculateGrossPrice(invoiceRequest.getNetPrice()));
+
+            if (nifVerification.verify(invoiceRequest.getNipSeller())) {
+                System.out.println("NIF/NIE/CIF for Seller is valid");
+            } else {
+                System.out.println("NIF/CIF/NIE for Seller is incorrect mathematically");
+                return "spanish/index_es";
+            }
+
+            if (nifVerification.verify(invoiceRequest.getNipBuyer())) {
+                System.out.println("NIF/NIE/CIF for Buyer is valid");
+            } else {
+                System.out.println("NIF/CIF/NIE for Buyer is incorrect mathematically");
+                return "spanish/index_es";
+            }
     
             double totalNet = 0;
             for (InvoiceItem item : invoiceRequest.getItems()) {
