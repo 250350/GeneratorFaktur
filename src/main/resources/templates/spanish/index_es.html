@@ -1,320 +1,746 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="pl">-->
+<!--<script src="https://unpkg.com/imask"></script>-->
+<!--<head>-->
+<!--    <th:block th:replace="fragments/head :: defaultHead"></th:block>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Generador de Facturas</title>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: Arial, sans-serif;-->
+<!--            background: #f4f6f8;-->
+<!--            display: flex;-->
+<!--            justify-content: center;-->
+<!--            align-items: flex-start;-->
+<!--            height: 100vh;-->
+<!--            margin: 0;-->
+<!--        }-->
+
+<!--        .container {-->
+<!--            background: white;-->
+<!--            padding: 30px 40px;-->
+<!--            border-radius: 12px;-->
+<!--            box-shadow: 0 10px 25px rgba(0,0,0,0.1);-->
+<!--            width: 550px;-->
+<!--        }-->
+
+<!--        h2 {-->
+<!--            text-align: center;-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+
+<!--        form {-->
+<!--            display: flex;-->
+<!--            flex-direction: column;-->
+<!--        }-->
+
+<!--        label {-->
+<!--            margin-top: 10px;-->
+<!--            font-weight: bold;-->
+<!--        }-->
+
+<!--        input {-->
+<!--            padding: 8px;-->
+<!--            border-radius: 6px;-->
+<!--            border: 1px solid #ccc;-->
+<!--            margin-top: 5px;-->
+<!--            transition: 0.2s;-->
+<!--        }-->
+
+<!--        input:focus {-->
+<!--            border-color: #007bff;-->
+<!--            outline: none;-->
+<!--        }-->
+
+<!--        button {-->
+<!--            margin-top: 20px;-->
+<!--            padding: 10px;-->
+<!--            border: none;-->
+<!--            border-radius: 8px;-->
+<!--            background: #007bff;-->
+<!--            color: white;-->
+<!--            font-size: 16px;-->
+<!--            cursor: pointer;-->
+<!--            transition: 0.2s;-->
+<!--        }-->
+
+<!--        button:hover {-->
+<!--            background: #0056b3;-->
+<!--        }-->
+
+<!--        .text-middle{-->
+<!--            text-align: center;-->
+<!--        }-->
+
+<!--        .checkbox{-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--        }-->
+
+<!--         .error {-->
+<!--             border: 2px solid red;-->
+<!--         }-->
+
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<div class="container">-->
+<!--    <h2>Generador de Facturas</h2>-->
+
+<!--    <form action="/show-invoice" th:object="${invoiceRequest}" method="post">-->
+
+<!--        <label class="text-middle">Datos del emisor</label>-->
+<!--        <label for="companyNameSeller">Nombre de la empresa:</label>-->
+<!--        <input id="companyNameSeller" th:field="*{companyNameSeller}"-->
+<!--               placeholder="Ej. Empresa S.L."-->
+<!--               th:classappend="${#fields.hasErrors('companyNameSeller')} ? 'error'">-->
+<!--        <p th:if="${#fields.hasErrors('companyNameSeller')} ? 'error'"-->
+<!--           th:errors="*{companyNameSeller}"-->
+<!--           style="color:red;">-->
+<!--        </p>-->
+
+<!--        <label for="addressSeller">Dirección:</label>-->
+<!--        <input id="addressSeller" th:field="*{addressSeller}" placeholder="Calle Mayor 5"-->
+<!--               th:classappend="${#fields.hasErrors('addressSeller')} ? 'error'">-->
+<!--        <p th:if="${#fields.hasErrors('addressSeller')} ? 'error'"-->
+<!--           th:errors="*{addressSeller}"-->
+<!--           style="color: red;">-->
+<!--        </p>-->
+
+<!--        <label for="postalCodeAndCitySeller">Código postal y ciudad:</label>-->
+<!--        <input id="postalCodeAndCitySeller" th:field="*{postalCodeAndCitySeller}" placeholder="28001 Madrid"-->
+<!--               th:classappend="${#fields.hasErrors('postalCodeAndCitySeller')} ? 'error'">-->
+<!--        <p th:if="${#fields.hasErrors('postalCodeAndCitySeller')} ? 'error'"-->
+<!--           th:errors="*{postalCodeAndCitySeller}"-->
+<!--           style="color: red;">-->
+<!--        </p>-->
+
+<!--        <label for="nipSeller">NIF / NIE / CIF:</label>-->
+<!--        <input id="nipSeller" th:field="*{nipSeller}" type="text"-->
+<!--               placeholder="12345678Z / X1234567L / B12345678"-->
+<!--               maxlength="9"-->
+<!--               th:classappend="${#fields.hasErrors('nipSeller')} ? 'error'"-->
+<!--               required>-->
+<!--        <p th:if="${#fields.hasErrors('nipSeller')}"-->
+<!--           th:errors="*{nipSeller}"-->
+<!--           style="color:red;">-->
+<!--        </p>-->
+
+<!--        <label class="text-middle">Datos del cliente:</label>-->
+<!--        <label for="companyNameBuyer">Nombre de la empresa:</label>-->
+<!--        <input id="companyNameBuyer" th:field="*{companyNameBuyer}" placeholder="Ej. Empresa S.L."-->
+<!--               th:classappend="${#fields.hasErrors('companyNameBuyer')} ? 'error'">-->
+<!--        <p th:if="${#fields.hasErrors('companyNameBuyer')} ? 'error'"-->
+<!--           th:errors="*{companyNameBuyer}"-->
+<!--           style="color:red;">-->
+<!--        </p>-->
+
+<!--        <label for="addressBuyer">Dirección:</label>-->
+<!--        <input id="addressBuyer" th:field="*{addressBuyer}" placeholder="Calle Mayor 5"-->
+<!--               th:classappend="${#fields.hasErrors('addressBuyer')} ? 'error'">-->
+<!--        <p th:if="${#fields.hasErrors('addressBuyer')} ? 'error'"-->
+<!--           th:errors="*{addressBuyer}"-->
+<!--           style="color: red;">-->
+<!--        </p>-->
+
+<!--        <label for="postalCodeAndCityBuyer">Código postal y ciudad:</label>-->
+<!--        <input id="postalCodeAndCityBuyer" th:field="*{postalCodeAndCityBuyer}" placeholder="28001 Madrid"-->
+<!--               th:classappend="${#fields.hasErrors('postalCodeAndCityBuyer')} ? 'error'">-->
+<!--        <p th:if="${#fields.hasErrors('postalCodeAndCityBuyer')} ? 'error'"-->
+<!--           th:errors="*{postalCodeAndCityBuyer}"-->
+<!--           style="color: red;">-->
+<!--        </p>-->
+
+<!--        <label for="nipBuyer">NIF / NIE / CIF:</label>-->
+<!--        <input id="nipBuyer" th:field="*{nipBuyer}" type="text"-->
+<!--               placeholder="12345678Z / X1234567L / B12345678"-->
+<!--               maxlength="9"-->
+<!--               th:classappend="${#fields.hasErrors('nipBuyer')} ? 'error'"-->
+<!--               required>-->
+<!--        <p th:if="${#fields.hasErrors('nipBuyer')}"-->
+<!--           th:errors="*{nipBuyer}"-->
+<!--           style="color:red;">-->
+<!--        </p>-->
+
+<!--        <label>Productos / Servicios:</label>-->
+
+<!--        <table id="itemsTable" style="margin-top:10px; width:100%;">-->
+<!--            <tr>-->
+<!--                <th>Concepto</th>-->
+<!--                <th>Cantidad</th>-->
+<!--                <th>Precio (€)</th>-->
+<!--            </tr>-->
+
+<!--            <tr>-->
+<!--                <td><input name="items[0].description"></td>-->
+<!--                <td><input type="number" name="items[0].amount" min="1" step="1" required></td>-->
+<!--                <td><input type="number" step="0.01" name="items[0].netPrice" min="0.01" required></td>-->
+<!--            </tr>-->
+<!--        </table>-->
+
+<!--        <button type="button" onclick="addRow()">Añadir producto</button>-->
+
+<!--        <label for="stawkaVAT">IVA (%) – se añade:</label>-->
+<!--        <input type="number" id="stawkaVAT" th:field="*{stawkaVAT}"-->
+<!--               value="21" placeholder="21" step="1" min="1"-->
+<!--               th:classappend="${#fields.hasErrors('stawkaVAT')} ? 'error'">-->
+<!--        <p th:if="${#fields.hasErrors('stawkaVAT')} ? 'error'"-->
+<!--           th:errors="*{stawkaVAT}"-->
+<!--           style="color: red;">-->
+<!--        </p>-->
+
+<!--        <label for="applyIRPF" class="checkbox">Aplicar IRPF:-->
+<!--            <input type="checkbox" role="switch"-->
+<!--                   id="applyIRPF" th:field="*{applyIRPF}">-->
+<!--        </label>-->
+
+<!--        <label for="irpf">IRPF (%) – se resta:</label>-->
+<!--        <select id="irpf" name="irpf">-->
+<!--            <option value="0">0% (sin retención)</option>-->
+<!--            <option value="7">7% (nuevos autónomos)</option>-->
+<!--            <option value="15" selected>15% (estándar)</option>-->
+<!--        </select>-->
+
+<!--        <label for="invoiceNumber">Número de factura:</label>-->
+<!--        <input type="number" id="invoiceNumber" step="1" min="1"-->
+<!--               th:field="*{invoiceNumber}"-->
+<!--               th:classappend="${#fields.hasErrors('invoiceNumber')} ? 'error'">-->
+<!--        <p th:if="${#fields.hasErrors('invoiceNumber')} ? 'error'"-->
+<!--           th:errors="*{invoiceNumber}"-->
+<!--           style="color: red;">-->
+<!--        </p>-->
+
+<!--        <label for="completionOfServiceDate">Fecha del servicio:</label>-->
+<!--        <input type="date" pattern="dd/MM/yyyy"-->
+<!--               id="completionOfServiceDate" th:field="*{completionOfServiceDate}"-->
+<!--               th:classappend="${#fields.hasErrors('completionOfServiceDate')} ? 'error'">-->
+<!--        <p th:if="${#fields.hasErrors('completionOfServiceDate')} ? 'error'"-->
+<!--           th:errors="*{completionOfServiceDate}"-->
+<!--           style="color: red;">-->
+<!--        </p>-->
+
+<!--        <label for="bankAccountNumber">Cuenta bancaria (IBAN):</label>-->
+<!--        <input type="text" id="bankAccountNumber" th:field="*{bankAccountNumber}"-->
+<!--               pattern="\d{1,26}" maxlength="26" inputmode="numeric"-->
+<!--               placeholder="Máx. 26 dígitos"-->
+<!--               th:classappend="${#fields.hasErrors('bankAccountNumber')} ? 'error'">-->
+<!--        <p th:if="${#fields.hasErrors('bankAccountNumber')} ? 'error'"-->
+<!--           th:errors="*{bankAccountNumber}"-->
+<!--           style="color: red;">-->
+<!--        </p>-->
+
+<!--        <label for="swift">SWIFT / BIC:</label>-->
+<!--        <input type="text" id="swift" th:field="*{swift}"-->
+<!--               pattern="[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}[A-Z0-9]{3}" maxlength="11"-->
+<!--               th:classappend="${#fields.hasErrors('swift')} ? 'error'">-->
+<!--        <p th:if="${#fields.hasErrors('swift')} ? 'error'"-->
+<!--           th:errors="*{swift}"-->
+<!--           style="color: red;">-->
+<!--        </p>-->
+
+<!--        <label for="paymentDate">Fecha límite de pago:</label>-->
+<!--        <input type="date" pattern="dd/MM/yyyy"-->
+<!--               id="paymentDate" th:field="*{paymentDate}"-->
+<!--               th:classappend="${#fields.hasErrors('paymentDate')} ? 'error'">-->
+<!--        <p th:if="${#fields.hasErrors('paymentDate')} ? 'error'"-->
+<!--           th:errors="*{paymentDate}"-->
+<!--           style="color: red;">-->
+<!--        </p>-->
+
+<!--        <label style="display:flex; gap:8px; margin-top:15px;">-->
+<!--            <input type="checkbox" name="privacyAccepted" required>-->
+<!--            Acepto la <a href="/politica-privacidad" target="_blank">política de privacidad</a>-->
+<!--        </label>-->
+
+<!--        <button type="submit">Generar factura</button>-->
+
+<!--        <footer style="margin-top:30px;text-align:center;font-size:12px;">-->
+<!--            <a href="/politica-privacidad">Política de privacidad</a> |-->
+<!--            <a href="/aviso-legal">Aviso legal</a>-->
+<!--        </footer>-->
+<!--    </form>-->
+<!--</div>-->
+<!--<script>-->
+<!--    //disable IRPF-->
+<!--    const checkbox = document.getElementById('applyIRPF')-->
+<!--    const select = document.getElementById('irpf')-->
+<!--    function updateIRPF() {-->
+<!--        // if(checkbox.checked) {-->
+<!--        //     select.disabled = false;-->
+<!--        // } else {-->
+<!--        //     select.disabled = true;-->
+<!--        // }-->
+
+<!--        select.disabled = !checkbox.checked;-->
+<!--    }-->
+
+<!--    updateIRPF();-->
+<!--    checkbox.addEventListener("change", updateIRPF);-->
+
+<!--    //nipBuyer format-->
+<!--    const nipBuyerInput = document.getElementById('nipBuyer');-->
+
+<!--    IMask(nipBuyerInput, {-->
+<!--        mask: 'XXXXXXXXX',-->
+
+<!--        definitions: {-->
+<!--            X: /[0-9A-Z]/-->
+<!--        },-->
+
+<!--        prepare: (str) => str.toUpperCase(),-->
+
+<!--        validate: (value) => {-->
+<!--            if (value.length < 9) return true;-->
+
+<!--            return (-->
+<!--                /^[0-9]{8}[A-Z]$/.test(value) ||      // NIF-->
+<!--                /^[XYZ][0-9]{7}[A-Z]$/.test(value) || // NIE-->
+<!--                /^[A-Z][0-9]{7}[A-Z0-9]$/.test(value) // CIF-->
+<!--            );-->
+<!--        }-->
+<!--    });-->
+<!--        let index = 1;-->
+
+<!--        function addRow() {-->
+<!--        const table = document.getElementById("itemsTable");-->
+
+<!--        const row = table.insertRow();-->
+
+<!--        row.innerHTML = `-->
+<!--        <td><input name="items[${index}].description"></td>-->
+<!--        <td><input type="number" name="items[${index}].amount"></td>-->
+<!--        <td><input type="number" step="0.01" name="items[${index}].netPrice"></td>-->
+<!--    `;-->
+
+<!--        index++;-->
+<!--    }-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html lang="pl">
 <script src="https://unpkg.com/imask"></script>
+
 <head>
     <th:block th:replace="fragments/head :: defaultHead"></th:block>
     <meta charset="UTF-8">
-    <title>Generador de Facturas</title>
+
+    <title>Crear factura</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --navy-deep: hsl(222, 60%, 16%);
+            --navy-mid: hsl(213, 50%, 24%);
+            --navy-accent: hsl(210, 45%, 43%);
+            --navy-light: hsl(220, 30%, 93%);
+            --gold: hsl(40, 70%, 50%);
+            --gold-hover: hsl(40, 70%, 45%);
+            --bg: hsl(220, 30%, 97%);
+            --fg: hsl(220, 40%, 13%);
+            --muted: hsl(215, 15%, 45%);
+            --border: hsl(216, 25%, 87%);
+            --card: #fff;
+            --radius: 0.75rem;
+            --font-heading: 'Libre Baskerville', serif;
+            --font-body: 'IBM Plex Sans', sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            height: 100vh;
-            margin: 0;
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--fg);
+        }
+
+        /* HEADER */
+        .header {
+            background: var(--navy-deep);
+            color: #fff;
+            padding: 1rem 0;
         }
 
         .container {
-            background: white;
-            padding: 30px 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 550px;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
         }
 
-        h2 {
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .logo svg { color: var(--gold); }
+
+        /* FORM SECTION */
+        .section {
+            padding: 3rem 0;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,.06);
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            margin-bottom: 1.5rem;
             text-align: center;
-            margin-bottom: 20px;
         }
 
         form {
             display: flex;
             flex-direction: column;
+            gap: 1rem;
         }
 
         label {
-            margin-top: 10px;
-            font-weight: bold;
+            font-size: .85rem;
+            font-weight: 600;
         }
 
-        input {
-            padding: 8px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            margin-top: 5px;
-            transition: 0.2s;
+        input, select {
+            padding: .6rem;
+            border-radius: .5rem;
+            border: 1px solid var(--border);
+            font-family: var(--font-body);
+            transition: .2s;
         }
 
-        input:focus {
-            border-color: #007bff;
+        input:focus, select:focus {
+            border-color: var(--navy-accent);
             outline: none;
+            box-shadow: 0 0 0 2px rgba(0,0,0,.05);
         }
 
-        button {
-            margin-top: 20px;
-            padding: 10px;
+        .error {
+            border-color: red;
+        }
+
+        /* BUTTON */
+        .btn {
+            margin-top: 1rem;
+            padding: .8rem;
             border: none;
-            border-radius: 8px;
-            background: #007bff;
-            color: white;
-            font-size: 16px;
+            border-radius: var(--radius);
+            background: var(--gold);
+            color: var(--navy-deep);
+            font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
+            transition: .2s;
         }
 
-        button:hover {
-            background: #0056b3;
+        .btn:hover {
+            background: var(--gold-hover);
         }
 
-        .text-middle{
-            text-align: center;
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: .5rem;
         }
 
-        .checkbox{
+        th {
+            text-align: left;
+            font-size: .8rem;
+            color: var(--muted);
+        }
+
+        td input {
+            width: 100%;
+        }
+
+        .section-title {
+            margin-top: 1.5rem;
+            font-weight: 700;
+            font-size: .9rem;
+            color: var(--navy-accent);
+        }
+
+        .checkbox {
             display: flex;
+            gap: .5rem;
             align-items: center;
         }
 
-         .error {
-             border: 2px solid red;
-         }
-
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: .8rem;
+            color: var(--muted);
+        }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h2>Generador de Facturas</h2>
+<header class="header">
+    <div class="container header-inner">
+        <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--navy-accent);"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 12h4"/><path d="M10 16h4"/></svg>
+            generadordefacturas.es
+        </div>
+    </div>
+</header>
 
-    <form action="/show-invoice" th:object="${invoiceRequest}" method="post">
+<section class="section">
+    <div class="container">
+        <div class="card">
 
-        <label class="text-middle">Datos del emisor</label>
-        <label for="companyNameSeller">Nombre de la empresa:</label>
-        <input id="companyNameSeller" th:field="*{companyNameSeller}"
-               placeholder="Ej. Empresa S.L."
-               th:classappend="${#fields.hasErrors('companyNameSeller')} ? 'error'">
-        <p th:if="${#fields.hasErrors('companyNameSeller')} ? 'error'"
-           th:errors="*{companyNameSeller}"
-           style="color:red;">
-        </p>
+            <h1>Crear factura</h1>
 
-        <label for="addressSeller">Dirección:</label>
-        <input id="addressSeller" th:field="*{addressSeller}" placeholder="Calle Mayor 5"
-               th:classappend="${#fields.hasErrors('addressSeller')} ? 'error'">
-        <p th:if="${#fields.hasErrors('addressSeller')} ? 'error'"
-           th:errors="*{addressSeller}"
-           style="color: red;">
-        </p>
+            <form action="/show-invoice" th:object="${invoiceRequest}" method="post">
 
-        <label for="postalCodeAndCitySeller">Código postal y ciudad:</label>
-        <input id="postalCodeAndCitySeller" th:field="*{postalCodeAndCitySeller}" placeholder="28001 Madrid"
-               th:classappend="${#fields.hasErrors('postalCodeAndCitySeller')} ? 'error'">
-        <p th:if="${#fields.hasErrors('postalCodeAndCitySeller')} ? 'error'"
-           th:errors="*{postalCodeAndCitySeller}"
-           style="color: red;">
-        </p>
+                <div class="section-title">Datos del emisor</div>
+                <label for="companyNameSeller">Nombre de la empresa:</label>
+                <input id="companyNameSeller" th:field="*{companyNameSeller}"
+                       placeholder="Ej. Empresa S.L."
+                       th:classappend="${#fields.hasErrors('companyNameSeller')} ? 'error'">
+                <p th:if="${#fields.hasErrors('companyNameSeller')} ? 'error'"
+                   th:errors="*{companyNameSeller}"
+                   style="color:red;">
+                </p>
 
-        <label for="nipSeller">NIF / NIE / CIF:</label>
-        <input id="nipSeller" th:field="*{nipSeller}" type="text"
-               placeholder="12345678Z / X1234567L / B12345678"
-               maxlength="9"
-               th:classappend="${#fields.hasErrors('nipSeller')} ? 'error'"
-               required>
-        <p th:if="${#fields.hasErrors('nipSeller')}"
-           th:errors="*{nipSeller}"
-           style="color:red;">
-        </p>
+                <label for="addressSeller">Dirección:</label>
+                <input id="addressSeller" th:field="*{addressSeller}" placeholder="Calle Mayor 5"
+                       th:classappend="${#fields.hasErrors('addressSeller')} ? 'error'">
+                <p th:if="${#fields.hasErrors('addressSeller')} ? 'error'"
+                   th:errors="*{addressSeller}"
+                   style="color: red;">
+                </p>
 
-        <label class="text-middle">Datos del cliente:</label>
-        <label for="companyNameBuyer">Nombre de la empresa:</label>
-        <input id="companyNameBuyer" th:field="*{companyNameBuyer}" placeholder="Ej. Empresa S.L."
-               th:classappend="${#fields.hasErrors('companyNameBuyer')} ? 'error'">
-        <p th:if="${#fields.hasErrors('companyNameBuyer')} ? 'error'"
-           th:errors="*{companyNameBuyer}"
-           style="color:red;">
-        </p>
+                <label for="postalCodeAndCitySeller">Código postal y ciudad:</label>
+                <input id="postalCodeAndCitySeller" th:field="*{postalCodeAndCitySeller}" placeholder="28001 Madrid"
+                       th:classappend="${#fields.hasErrors('postalCodeAndCitySeller')} ? 'error'">
+                <p th:if="${#fields.hasErrors('postalCodeAndCitySeller')} ? 'error'"
+                   th:errors="*{postalCodeAndCitySeller}"
+                   style="color: red;">
+                </p>
 
-        <label for="addressBuyer">Dirección:</label>
-        <input id="addressBuyer" th:field="*{addressBuyer}" placeholder="Calle Mayor 5"
-               th:classappend="${#fields.hasErrors('addressBuyer')} ? 'error'">
-        <p th:if="${#fields.hasErrors('addressBuyer')} ? 'error'"
-           th:errors="*{addressBuyer}"
-           style="color: red;">
-        </p>
+                <label for="nipSeller">NIF / NIE / CIF:</label>
+                <input id="nipSeller" th:field="*{nipSeller}" type="text"
+                       placeholder="12345678Z / X1234567L / B12345678"
+                       maxlength="9"
+                       th:classappend="${#fields.hasErrors('nipSeller')} ? 'error'"
+                       required>
+                <p th:if="${#fields.hasErrors('nipSeller')}"
+                   th:errors="*{nipSeller}"
+                   style="color:red;">
+                </p>
 
-        <label for="postalCodeAndCityBuyer">Código postal y ciudad:</label>
-        <input id="postalCodeAndCityBuyer" th:field="*{postalCodeAndCityBuyer}" placeholder="28001 Madrid"
-               th:classappend="${#fields.hasErrors('postalCodeAndCityBuyer')} ? 'error'">
-        <p th:if="${#fields.hasErrors('postalCodeAndCityBuyer')} ? 'error'"
-           th:errors="*{postalCodeAndCityBuyer}"
-           style="color: red;">
-        </p>
+                <div class="section-title">Datos del cliente:</div>
+                <label for="companyNameBuyer">Nombre de la empresa:</label>
+                <input id="companyNameBuyer" th:field="*{companyNameBuyer}" placeholder="Ej. Empresa S.L."
+                       th:classappend="${#fields.hasErrors('companyNameBuyer')} ? 'error'">
+                <p th:if="${#fields.hasErrors('companyNameBuyer')} ? 'error'"
+                   th:errors="*{companyNameBuyer}"
+                   style="color:red;">
+                </p>
 
-        <label for="nipBuyer">NIF / NIE / CIF:</label>
-        <input id="nipBuyer" th:field="*{nipBuyer}" type="text"
-               placeholder="12345678Z / X1234567L / B12345678"
-               maxlength="9"
-               th:classappend="${#fields.hasErrors('nipBuyer')} ? 'error'"
-               required>
-        <p th:if="${#fields.hasErrors('nipBuyer')}"
-           th:errors="*{nipBuyer}"
-           style="color:red;">
-        </p>
+                <label for="addressBuyer">Dirección:</label>
+                <input id="addressBuyer" th:field="*{addressBuyer}" placeholder="Calle Mayor 5"
+                       th:classappend="${#fields.hasErrors('addressBuyer')} ? 'error'">
+                <p th:if="${#fields.hasErrors('addressBuyer')} ? 'error'"
+                   th:errors="*{addressBuyer}"
+                   style="color: red;">
+                </p>
 
-        <label>Productos / Servicios:</label>
+                <label for="postalCodeAndCityBuyer">Código postal y ciudad:</label>
+                <input id="postalCodeAndCityBuyer" th:field="*{postalCodeAndCityBuyer}" placeholder="28001 Madrid"
+                       th:classappend="${#fields.hasErrors('postalCodeAndCityBuyer')} ? 'error'">
+                <p th:if="${#fields.hasErrors('postalCodeAndCityBuyer')} ? 'error'"
+                   th:errors="*{postalCodeAndCityBuyer}"
+                   style="color: red;">
+                </p>
 
-        <table id="itemsTable" style="margin-top:10px; width:100%;">
-            <tr>
-                <th>Concepto</th>
-                <th>Cantidad</th>
-                <th>Precio (€)</th>
-            </tr>
+                <label for="nipBuyer">NIF / NIE / CIF:</label>
+                <input id="nipBuyer" th:field="*{nipBuyer}" type="text"
+                       placeholder="12345678Z / X1234567L / B12345678"
+                       maxlength="9"
+                       th:classappend="${#fields.hasErrors('nipBuyer')} ? 'error'"
+                       required>
+                <p th:if="${#fields.hasErrors('nipBuyer')}"
+                   th:errors="*{nipBuyer}"
+                   style="color:red;">
+                </p>
 
-            <tr>
-                <td><input name="items[0].description"></td>
-                <td><input type="number" name="items[0].amount" min="1" step="1" required></td>
-                <td><input type="number" step="0.01" name="items[0].netPrice" min="0.01" required></td>
-            </tr>
-        </table>
+                <div class="section-title">Productos / Servicios:</div>
 
-        <button type="button" onclick="addRow()">Añadir producto</button>
+                <table id="itemsTable" style="margin-top:10px; width:100%;">
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Cantidad</th>
+                        <th>Precio (€)</th>
+                    </tr>
 
-        <label for="stawkaVAT">IVA (%) – se añade:</label>
-        <input type="number" id="stawkaVAT" th:field="*{stawkaVAT}"
-               value="21" placeholder="21" step="1" min="1"
-               th:classappend="${#fields.hasErrors('stawkaVAT')} ? 'error'">
-        <p th:if="${#fields.hasErrors('stawkaVAT')} ? 'error'"
-           th:errors="*{stawkaVAT}"
-           style="color: red;">
-        </p>
+                    <tr>
+                        <td><input name="items[0].description"></td>
+                        <td><input type="number" name="items[0].amount" min="1" step="1" required></td>
+                        <td><input type="number" step="0.01" name="items[0].netPrice" min="0.01" required></td>
+                    </tr>
+                </table>
 
-        <label for="applyIRPF" class="checkbox">Aplicar IRPF:
-            <input type="checkbox" role="switch"
-                   id="applyIRPF" th:field="*{applyIRPF}">
-        </label>
+                <button type="button" onclick="addRow()" class="btn">Añadir producto</button>
 
-        <label for="irpf">IRPF (%) – se resta:</label>
-        <select id="irpf" name="irpf">
-            <option value="0">0% (sin retención)</option>
-            <option value="7">7% (nuevos autónomos)</option>
-            <option value="15" selected>15% (estándar)</option>
-        </select>
+                <label for="stawkaVAT">IVA (%) – se añade:</label>
+                <input type="number" id="stawkaVAT" th:field="*{stawkaVAT}"
+                       value="21" placeholder="21" step="1" min="1"
+                       th:classappend="${#fields.hasErrors('stawkaVAT')} ? 'error'">
+                <p th:if="${#fields.hasErrors('stawkaVAT')} ? 'error'"
+                   th:errors="*{stawkaVAT}"
+                   style="color: red;">
+                </p>
 
-        <label for="invoiceNumber">Número de factura:</label>
-        <input type="number" id="invoiceNumber" step="1" min="1"
-               th:field="*{invoiceNumber}"
-               th:classappend="${#fields.hasErrors('invoiceNumber')} ? 'error'">
-        <p th:if="${#fields.hasErrors('invoiceNumber')} ? 'error'"
-           th:errors="*{invoiceNumber}"
-           style="color: red;">
-        </p>
+                <div class="checkbox">
+                    <label for="applyIRPF" class="checkbox">
+                        <input type="checkbox" role="switch"
+                               id="applyIRPF" th:field="*{applyIRPF}">
+                        Aplicar IRPF
+                    </label>
+                </div>
 
-        <label for="completionOfServiceDate">Fecha del servicio:</label>
-        <input type="date" pattern="dd/MM/yyyy"
-               id="completionOfServiceDate" th:field="*{completionOfServiceDate}"
-               th:classappend="${#fields.hasErrors('completionOfServiceDate')} ? 'error'">
-        <p th:if="${#fields.hasErrors('completionOfServiceDate')} ? 'error'"
-           th:errors="*{completionOfServiceDate}"
-           style="color: red;">
-        </p>
+                <label for="irpf">IRPF (%) – se resta:</label>
+                <select id="irpf" name="irpf">
+                    <option value="0">0% (sin retención)</option>
+                    <option value="7">7% (nuevos autónomos)</option>
+                    <option value="15" selected>15% (estándar)</option>
+                </select>
 
-        <label for="bankAccountNumber">Cuenta bancaria (IBAN):</label>
-        <input type="text" id="bankAccountNumber" th:field="*{bankAccountNumber}"
-               pattern="\d{1,26}" maxlength="26" inputmode="numeric"
-               placeholder="Máx. 26 dígitos"
-               th:classappend="${#fields.hasErrors('bankAccountNumber')} ? 'error'">
-        <p th:if="${#fields.hasErrors('bankAccountNumber')} ? 'error'"
-           th:errors="*{bankAccountNumber}"
-           style="color: red;">
-        </p>
+                <label for="invoiceNumber">Número de factura:</label>
+                <input type="number" id="invoiceNumber" step="1" min="1"
+                       th:field="*{invoiceNumber}"
+                       th:classappend="${#fields.hasErrors('invoiceNumber')} ? 'error'">
+                <p th:if="${#fields.hasErrors('invoiceNumber')} ? 'error'"
+                   th:errors="*{invoiceNumber}"
+                   style="color: red;">
+                </p>
 
-        <label for="swift">SWIFT / BIC:</label>
-        <input type="text" id="swift" th:field="*{swift}"
-               pattern="[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}[A-Z0-9]{3}" maxlength="11"
-               th:classappend="${#fields.hasErrors('swift')} ? 'error'">
-        <p th:if="${#fields.hasErrors('swift')} ? 'error'"
-           th:errors="*{swift}"
-           style="color: red;">
-        </p>
+                <label for="completionOfServiceDate">Fecha del servicio:</label>
+                <input type="date" pattern="dd/MM/yyyy"
+                       id="completionOfServiceDate" th:field="*{completionOfServiceDate}"
+                       th:classappend="${#fields.hasErrors('completionOfServiceDate')} ? 'error'">
+                <p th:if="${#fields.hasErrors('completionOfServiceDate')} ? 'error'"
+                   th:errors="*{completionOfServiceDate}"
+                   style="color: red;">
+                </p>
 
-        <label for="paymentDate">Fecha límite de pago:</label>
-        <input type="date" pattern="dd/MM/yyyy"
-               id="paymentDate" th:field="*{paymentDate}"
-               th:classappend="${#fields.hasErrors('paymentDate')} ? 'error'">
-        <p th:if="${#fields.hasErrors('paymentDate')} ? 'error'"
-           th:errors="*{paymentDate}"
-           style="color: red;">
-        </p>
+                <label for="bankAccountNumber">Cuenta bancaria (IBAN):</label>
+                <input type="text" id="bankAccountNumber" th:field="*{bankAccountNumber}"
+                       pattern="\d{1,26}" maxlength="26" inputmode="numeric"
+                       placeholder="Máx. 26 dígitos"
+                       th:classappend="${#fields.hasErrors('bankAccountNumber')} ? 'error'">
+                <p th:if="${#fields.hasErrors('bankAccountNumber')} ? 'error'"
+                   th:errors="*{bankAccountNumber}"
+                   style="color: red;">
+                </p>
 
-        <label style="display:flex; gap:8px; margin-top:15px;">
-            <input type="checkbox" name="privacyAccepted" required>
-            Acepto la <a href="/politica-privacidad" target="_blank">política de privacidad</a>
-        </label>
+                <label for="swift">SWIFT / BIC:</label>
+                <input type="text" id="swift" th:field="*{swift}"
+                       pattern="[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}[A-Z0-9]{3}" maxlength="11"
+                       th:classappend="${#fields.hasErrors('swift')} ? 'error'">
+                <p th:if="${#fields.hasErrors('swift')} ? 'error'"
+                   th:errors="*{swift}"
+                   style="color: red;">
+                </p>
 
-        <button type="submit">Generar factura</button>
+                <label for="paymentDate">Fecha límite de pago:</label>
+                <input type="date" pattern="dd/MM/yyyy"
+                       id="paymentDate" th:field="*{paymentDate}"
+                       th:classappend="${#fields.hasErrors('paymentDate')} ? 'error'">
+                <p th:if="${#fields.hasErrors('paymentDate')} ? 'error'"
+                   th:errors="*{paymentDate}"
+                   style="color: red;">
+                </p>
 
-        <footer style="margin-top:30px;text-align:center;font-size:12px;">
-            <a href="/politica-privacidad">Política de privacidad</a> |
-            <a href="/aviso-legal">Aviso legal</a>
-        </footer>
-    </form>
-</div>
-<script>
-    //disable IRPF
-    const checkbox = document.getElementById('applyIRPF')
-    const select = document.getElementById('irpf')
-    function updateIRPF() {
-        // if(checkbox.checked) {
-        //     select.disabled = false;
-        // } else {
-        //     select.disabled = true;
-        // }
+                <label style="display:flex; gap:8px; margin-top:15px;">
+                    <input type="checkbox" name="privacyAccepted" required>
+                    Acepto la <a href="/politica-privacidad" target="_blank">política de privacidad</a>
+                </label>
 
-        select.disabled = !checkbox.checked;
-    }
+                <button type="submit" class="btn">Generar factura</button>
 
-    updateIRPF();
-    checkbox.addEventListener("change", updateIRPF);
+                <footer style="margin-top:30px;text-align:center;font-size:12px;">
+                    <a href="/politica-privacidad">Política de privacidad</a> |
+                    <a href="/aviso-legal">Aviso legal</a>
+                </footer>
+            </form>
 
-    //nipBuyer format
-    const nipBuyerInput = document.getElementById('nipBuyer');
+            <script>
+                //disable IRPF
+                const checkbox = document.getElementById('applyIRPF')
+                const select = document.getElementById('irpf')
+                function updateIRPF() {
+                    // if(checkbox.checked) {
+                    //     select.disabled = false;
+                    // } else {
+                    //     select.disabled = true;
+                    // }
 
-    IMask(nipBuyerInput, {
-        mask: 'XXXXXXXXX',
+                    select.disabled = !checkbox.checked;
+                }
 
-        definitions: {
-            X: /[0-9A-Z]/
-        },
+                updateIRPF();
+                checkbox.addEventListener("change", updateIRPF);
 
-        prepare: (str) => str.toUpperCase(),
+                //nipBuyer format
+                const nipBuyerInput = document.getElementById('nipBuyer');
 
-        validate: (value) => {
-            if (value.length < 9) return true;
+                IMask(nipBuyerInput, {
+                    mask: 'XXXXXXXXX',
 
-            return (
-                /^[0-9]{8}[A-Z]$/.test(value) ||      // NIF
-                /^[XYZ][0-9]{7}[A-Z]$/.test(value) || // NIE
-                /^[A-Z][0-9]{7}[A-Z0-9]$/.test(value) // CIF
-            );
-        }
-    });
-        let index = 1;
+                    definitions: {
+                        X: /[0-9A-Z]/
+                    },
 
-        function addRow() {
-        const table = document.getElementById("itemsTable");
+                    prepare: (str) => str.toUpperCase(),
 
-        const row = table.insertRow();
+                    validate: (value) => {
+                        if (value.length < 9) return true;
 
-        row.innerHTML = `
+                        return (
+                            /^[0-9]{8}[A-Z]$/.test(value) ||      // NIF
+                            /^[XYZ][0-9]{7}[A-Z]$/.test(value) || // NIE
+                            /^[A-Z][0-9]{7}[A-Z0-9]$/.test(value) // CIF
+                        );
+                    }
+                });
+                let index = 1;
+
+                function addRow() {
+                    const table = document.getElementById("itemsTable");
+
+                    const row = table.insertRow();
+
+                    row.innerHTML = `
         <td><input name="items[${index}].description"></td>
         <td><input type="number" name="items[${index}].amount"></td>
         <td><input type="number" step="0.01" name="items[${index}].netPrice"></td>
     `;
 
-        index++;
-    }
-</script>
+                    index++;
+                }
+            </script>
+        </div>
+    </div>
+</section>
 </body>
 </html>
