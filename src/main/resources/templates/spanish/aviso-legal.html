@@ -3,67 +3,168 @@
 <head>
   <th:block th:replace="fragments/head :: defaultHead"></th:block>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aviso Legal</title>
+
+  <!-- FONTY -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy-deep: hsl(222, 60%, 16%);
+      --navy-accent: hsl(210, 45%, 43%);
+      --bg: hsl(220, 30%, 97%);
+      --fg: hsl(220, 40%, 13%);
+      --muted: hsl(215, 15%, 45%);
+      --border: hsl(216, 25%, 87%);
+      --card: #fff;
+      --radius: 0.75rem;
+      --font-heading: 'Libre Baskerville', serif;
+      --font-body: 'IBM Plex Sans', sans-serif;
+      --gold: hsl(40, 70%, 50%);
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--fg);
+      margin: 0;
+    }
+
+    h1, h2 { font-family: var(--font-heading); }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* HEADER */
+    .header {
+      background: var(--navy-deep);
+      padding: 1rem 0;
+      color: #fff;
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1120px;
+      margin: auto;
+      padding: 0 1.5rem;
+    }
+
+    .logo { font-weight: 700; }
+
+    .btn {
+      background: var(--gold);
+      padding: .5rem 1.2rem;
+      border-radius: var(--radius);
+      color: #000;
+      font-weight: 600;
+    }
+
+    /* CARD */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      line-height: 1.7;
+    }
+
+    h1 { margin-bottom: 1.5rem; }
+    h2 { margin-top: 2rem; margin-bottom: .5rem; }
+
+    p { color: var(--muted); }
+
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: .9rem;
+    }
+
+    footer a {
+      color: var(--navy-accent);
+      margin: 0 .5rem;
+    }
+  </style>
 </head>
+
 <body>
 
-<h1>Aviso Legal</h1>
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">generadordefacturas.es</div>
+    <a href="/create-invoice" class="btn">Crear factura</a>
+  </div>
+</header>
 
-<h2>1. Información general</h2>
-<p>
-  En cumplimiento de la Ley de Servicios de la Sociedad de la Información (LSSI-CE),
-  se informa que este sitio web es propiedad de:
-</p>
+<div class="container">
+  <div class="card">
 
-<p>
-  Titular: Generador de Facturas<br>
-  Email: contacto@generadordefacturas.es
-</p>
+    <h1>Aviso Legal</h1>
 
-<h2>2. Objeto</h2>
-<p>
-  Este sitio web ofrece una herramienta online para la generación de facturas
-  y documentos fiscales de forma automatizada.
-</p>
+    <h2>1. Información general</h2>
+    <p>
+      En cumplimiento de la Ley de Servicios de la Sociedad de la Información (LSSI-CE),
+      se informa que este sitio web es propiedad de:
+    </p>
 
-<h2>3. Condiciones de uso</h2>
-<p>
-  El uso del sitio implica la aceptación de estas condiciones.
-</p>
+    <p>
+      Titular: Generador de Facturas<br>
+      Email: contacto@generadordefacturas.es
+    </p>
 
-<p>
-  El usuario es responsable de la veracidad de los datos introducidos.
-</p>
+    <h2>2. Objeto</h2>
+    <p>
+      Este sitio web ofrece una herramienta online para la generación de facturas
+      y documentos fiscales de forma automatizada.
+    </p>
 
-<h2>4. Responsabilidad</h2>
-<p>
-  El titular no se hace responsable del uso indebido del servicio
-  ni de la exactitud fiscal de los datos introducidos por el usuario.
-</p>
+    <h2>3. Condiciones de uso</h2>
+    <p>
+      El uso del sitio implica la aceptación de estas condiciones.
+    </p>
 
-<h2>5. Propiedad intelectual</h2>
-<p>
-  El diseño, código y contenido del sitio están protegidos por derechos de autor.
-</p>
+    <p>
+      El usuario es responsable de la veracidad de los datos introducidos.
+    </p>
 
-<h2>6. Legislación aplicable</h2>
-<p>
-  La relación entre usuario y titular se rige por la legislación española.
-</p>
+    <h2>4. Responsabilidad</h2>
+    <p>
+      El titular no se hace responsable del uso indebido del servicio
+      ni de la exactitud fiscal de los datos introducidos por el usuario.
+    </p>
 
-<h2>7. Responsabilidad</h2>
-<p>
-  El titular no se hace responsable del uso indebido de la información generada.
-</p>
+    <h2>5. Propiedad intelectual</h2>
+    <p>
+      El diseño, código y contenido del sitio están protegidos por derechos de autor.
+    </p>
 
-<p>
-  Este software no es un sistema de facturación certificado SII/Verifactu. El usuario es responsable del uso conforme a la normativa fiscal aplicable.
-</p>
+    <h2>6. Legislación aplicable</h2>
+    <p>
+      La relación entre usuario y titular se rige por la legislación española.
+    </p>
 
-<footer>
-  <a href="/">Volver</a> |
-  <a href="/politica-privacidad">Política de privacidad</a>
-</footer>
+    <h2>7. Responsabilidad</h2>
+    <p>
+      El titular no se hace responsable del uso indebido de la información generada.
+    </p>
+
+    <p>
+      Este software no es un sistema de facturación certificado SII/Verifactu. El usuario es responsable del uso conforme a la normativa fiscal aplicable.
+    </p>
+
+    <footer>
+      <a href="/">Volver</a> |
+      <a href="/politica-privacidad">Política de privacidad</a>
+    </footer>
+
+  </div>
+</div>
 
 </body>
 </html>
