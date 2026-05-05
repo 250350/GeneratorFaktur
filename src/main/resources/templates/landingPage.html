@@ -3,238 +3,407 @@
 <head>
     <th:block th:replace="fragments/head :: defaultHead"></th:block>
     <meta charset="UTF-8">
-    <title>Generador de Facturas Online</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <title>Generador de Facturas Online - Crea facturas profesionales en segundos</title>
+    <meta name="description" content="Generador de facturas online rápido, simple y legal para autónomos y empresas en España. Sin complicaciones. Sin software complicado.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background: #f5f7fb;
-            color: #111;
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --navy-deep: hsl(222, 60%, 16%);
+            --navy-mid: hsl(213, 50%, 24%);
+            --navy-accent: hsl(210, 45%, 43%);
+            --navy-light: hsl(220, 30%, 93%);
+            --gold: hsl(40, 70%, 50%);
+            --gold-hover: hsl(40, 70%, 45%);
+            --bg: hsl(220, 30%, 97%);
+            --fg: hsl(220, 40%, 13%);
+            --muted: hsl(215, 15%, 45%);
+            --border: hsl(216, 25%, 87%);
+            --card: #fff;
+            --radius: 0.75rem;
+            --font-heading: 'Libre Baskerville', Georgia, serif;
+            --font-body: 'IBM Plex Sans', system-ui, sans-serif;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: auto;
-            padding: 40px 20px;
-        }
+        body { font-family: var(--font-body); background: var(--bg); color: var(--fg); -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, h4 { font-family: var(--font-heading); }
+        a { text-decoration: none; color: inherit; }
+        img { max-width: 100%; }
+
+        .container { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
+
+        /* HEADER */
+        .header { position: sticky; top: 0; z-index: 50; background: rgba(15, 27, 61, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(210, 210, 255, 0.1); }
+        .header .container { display: flex; align-items: center; justify-content: space-between; padding-top: 1rem; padding-bottom: 1rem; }
+        .logo { font-family: var(--font-heading); font-size: 1.15rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: .5rem; }
+        .logo svg { color: var(--gold); }
+        .btn { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--font-body); font-weight: 600; border: none; cursor: pointer; border-radius: var(--radius); transition: all .2s; }
+        .btn-gold { background: var(--gold); color: var(--navy-deep); padding: .6rem 1.5rem; font-size: .9rem; }
+        .btn-gold:hover { background: var(--gold-hover); }
+        .btn-gold-lg { background: var(--gold); color: var(--navy-deep); padding: .9rem 2.2rem; font-size: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,.2); }
+        .btn-gold-lg:hover { background: var(--gold-hover); }
+        .btn-navy { background: var(--navy-deep); color: #fff; padding: .75rem 1.5rem; }
+        .btn-navy:hover { background: var(--navy-mid); }
 
         /* HERO */
-        .hero {
-            text-align: center;
-            padding: 80px 20px;
-        }
-
-        .hero h1 {
-            font-size: 42px;
-            margin-bottom: 15px;
-        }
-
-        .hero p {
-            font-size: 18px;
-            color: #555;
-            max-width: 700px;
-            margin: auto;
-        }
-
-        .btn {
-            margin-top: 25px;
-            display: inline-block;
-            background: #2563eb;
-            color: white;
-            padding: 14px 26px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 16px;
-        }
-
-        .btn:hover {
-            background: #1e4fd6;
-        }
+        .hero { background: var(--navy-deep); color: #fff; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; inset: 0; opacity: .04; background-image: radial-gradient(circle at 1px 1px, #fff 1px, transparent 0); background-size: 40px 40px; }
+        .hero .container { position: relative; text-align: center; padding: 5rem 1.5rem 5rem; }
+        .hero-badge { display: inline-flex; align-items: center; gap: .5rem; background: rgba(255,255,255,.08); border: 1px solid rgba(210,210,255,.15); border-radius: 999px; padding: .4rem 1rem; font-size: .85rem; color: var(--navy-light); margin-bottom: 1.5rem; }
+        .hero-badge svg { color: var(--gold); }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; line-height: 1.15; margin-bottom: 1.5rem; text-wrap: balance; }
+        .hero p { max-width: 560px; margin: 0 auto 2.5rem; font-size: 1.1rem; line-height: 1.7; color: rgba(220,225,240,.75); }
+        .trust-badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 3rem; }
+        .trust-badge { display: flex; align-items: center; gap: .5rem; font-size: .85rem; color: rgba(220,225,240,.6); }
+        .trust-badge svg { color: var(--gold); width: 16px; height: 16px; }
 
         /* SECTIONS */
-        .section {
-            padding: 60px 20px;
-            text-align: center;
-        }
+        .section { padding: 5rem 0; }
+        .section-alt { background: hsl(220, 25%, 95%); }
+        .section-label { text-transform: uppercase; letter-spacing: .15em; font-size: .8rem; font-weight: 600; color: var(--navy-accent); margin-bottom: .75rem; font-family: var(--font-body); }
+        .section-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; margin-bottom: .75rem; }
+        .section-desc { color: var(--muted); font-size: 1.05rem; max-width: 520px; margin: 0 auto 3rem; }
+        .section-header { text-align: center; margin-bottom: 3rem; }
 
-        .features {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
+        /* FEATURES GRID */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 960px; margin: 0 auto; }
+        .feature-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; transition: all .3s; }
+        .feature-card:hover { box-shadow: 0 8px 32px -4px rgba(15,27,61,.12); transform: translateY(-3px); }
+        .feature-icon { width: 44px; height: 44px; background: var(--navy-deep); border-radius: .6rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; color: #fff; }
+        .feature-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: .5rem; }
+        .feature-card p { font-size: .9rem; color: var(--muted); line-height: 1.6; }
 
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            width: 280px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        }
+        /* HOW IT WORKS */
+        .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; max-width: 800px; margin: 0 auto; }
+        .step { text-align: center; position: relative; }
+        .step-icon { width: 80px; height: 80px; background: var(--navy-deep); border-radius: 1rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; color: #fff; position: relative; box-shadow: 0 4px 16px rgba(0,0,0,.15); }
+        .step-num { position: absolute; top: -8px; right: -8px; width: 28px; height: 28px; background: var(--gold); border-radius: 50%; font-size: .75rem; font-weight: 700; color: var(--navy-deep); display: flex; align-items: center; justify-content: center; font-family: var(--font-body); }
+        .step h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: .5rem; }
+        .step p { font-size: .9rem; color: var(--muted); line-height: 1.5; }
 
         /* PRICING */
-        .pricing {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .price-box {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 280px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        }
-
-        .price {
-            font-size: 32px;
-            margin: 15px 0;
-            color: #2563eb;
-        }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; max-width: 700px; margin: 0 auto; }
+        .plan { border: 1px solid var(--border); border-radius: 1rem; padding: 2rem; background: var(--card); transition: all .3s; }
+        .plan.featured { background: var(--navy-deep); color: #fff; border-color: var(--navy-accent); box-shadow: 0 8px 40px rgba(0,0,0,.2); transform: scale(1.02); position: relative; }
+        .plan.featured .plan-desc { color: rgba(220,225,240,.65); }
+        .plan.featured .plan-period { color: rgba(220,225,240,.5); }
+        .plan.featured .check { color: var(--gold); }
+        .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--gold); color: var(--navy-deep); font-size: .7rem; font-weight: 700; padding: .3rem 1rem; border-radius: 999px; }
+        .plan-name { font-size: 1.2rem; font-weight: 700; margin-bottom: .25rem; }
+        .plan-desc { font-size: .85rem; color: var(--muted); margin-bottom: 1.5rem; }
+        .plan-price { font-size: 2.5rem; font-weight: 700; margin-bottom: 1.5rem; }
+        .plan-period { font-size: .85rem; font-weight: 400; color: var(--muted); }
+        .plan-features { list-style: none; margin-bottom: 2rem; }
+        .plan-features li { display: flex; align-items: flex-start; gap: .75rem; font-size: .9rem; margin-bottom: .75rem; }
+        .check { color: var(--navy-accent); flex-shrink: 0; margin-top: 2px; }
+        .plan .btn { width: 100%; justify-content: center; }
 
         /* FAQ */
-        .faq {
-            max-width: 700px;
-            margin: auto;
-            text-align: left;
-        }
+        .faq-list { max-width: 640px; margin: 0 auto; }
+        .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: .75rem; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+        .faq-question { width: 100%; padding: 1.25rem 1.5rem; background: none; border: none; font-family: var(--font-body); font-size: .95rem; font-weight: 600; color: var(--fg); text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .faq-question:hover { color: var(--navy-accent); }
+        .faq-question svg { transition: transform .25s; flex-shrink: 0; }
+        .faq-item.open .faq-question svg { transform: rotate(180deg); }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+        .faq-answer-inner { padding: 0 1.5rem 1.25rem; font-size: .9rem; color: var(--muted); line-height: 1.7; }
 
-        .faq h3 {
-            margin-top: 20px;
-        }
+        /* CTA */
+        .cta-section { background: var(--navy-deep); color: #fff; text-align: center; padding: 5rem 1.5rem; position: relative; overflow: hidden; }
+        .cta-section::before { content: ''; position: absolute; inset: 0; opacity: .03; background-image: radial-gradient(circle at 1px 1px, #fff 1px, transparent 0); background-size: 32px 32px; }
+        .cta-section .container { position: relative; }
+        .cta-section h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: 1rem; }
+        .cta-section p { color: rgba(220,225,240,.65); font-size: 1.05rem; max-width: 480px; margin: 0 auto 2.5rem; }
 
         /* FOOTER */
-        footer {
-            text-align: center;
-            padding: 30px;
-            color: #666;
-            font-size: 14px;
+        .footer { border-top: 1px solid var(--border); background: var(--card); padding: 3rem 0 2rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2.5rem; }
+        .footer h4 { font-size: .8rem; text-transform: uppercase; letter-spacing: .1em; font-weight: 600; margin-bottom: 1rem; font-family: var(--font-body); }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: .5rem; }
+        .footer-links a { font-size: .85rem; color: var(--muted); transition: color .2s; }
+        .footer-links a:hover { color: var(--fg); }
+        .footer-bottom { border-top: 1px solid var(--border); padding-top: 2rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; font-size: .8rem; color: var(--muted); }
+        .footer-legal { display: flex; gap: 1.5rem; }
+        .footer-legal a:hover { color: var(--fg); }
+        .footer-note { text-align: center; margin-top: 1.5rem; font-size: .75rem; color: rgba(130,140,160,.6); }
+
+        /* ICONS (inline SVG helper) */
+        .icon { width: 20px; height: 20px; }
+        .icon-lg { width: 32px; height: 32px; }
+
+        @media (max-width: 640px) {
+            .trust-badges { flex-direction: column; align-items: center; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .plan.featured { transform: none; }
+            .footer-bottom { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
-
 <body>
 
+<!-- HEADER -->
+<header class="header">
+    <div class="container">
+        <a class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 12h4"/><path d="M10 16h4"/></svg>
+            generadordefacturas.es
+        </a>
+        <a href="/create-invoice" class="btn btn-gold">Crear factura</a>
+    </div>
+</header>
+
 <!-- HERO -->
-<div class="hero">
-    <h1>Crea facturas en segundos</h1>
-    <p>
-        Generador de facturas online rápido, simple y legal para autónomos y empresas en España.
-        Sin complicaciones. Sin software complicado.
-    </p>
-
-    <a href="/create-invoice" class="btn">Crear factura gratis</a>
-</div>
-
-<!-- TRUST BLOCK -->
-<div style="font-size:15px; color:#555; text-align:center;">
-    ✔ No almacenamos tus facturas en base de datos<br>
-    ✔ Procesamiento seguro en tiempo real<br>
-    ✔ Herramienta de generación de documentos fiscales<br>
-</div>
+<section class="hero">
+    <div class="container">
+        <div class="hero-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Generador de facturas nº1 en España
+        </div>
+        <h1>Crea facturas profesionales en segundos</h1>
+        <p>Generador de facturas online rápido, simple y legal para autónomos y empresas en España. Sin complicaciones. Sin software complicado.</p>
+        <a href="/create-invoice" class="btn btn-gold-lg">
+            Crear factura gratis
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <div class="trust-badges">
+            <div class="trust-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+                No almacenamos tus datos
+            </div>
+            <div class="trust-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                Procesamiento en tiempo real
+            </div>
+            <div class="trust-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 12h4"/><path d="M10 16h4"/></svg>
+                Documentos fiscales válidos
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- FEATURES -->
-<div class="section">
-    <h2>Por qué usar nuestro generador</h2>
-
-    <div class="features">
-        <div class="card">
-            <h3>⚡ Rápido</h3>
-            <p>Genera una factura en menos de 30 segundos.</p>
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <p class="section-label">Ventajas</p>
+            <h2 class="section-title">Por qué elegir nuestro generador</h2>
+            <p class="section-desc">Todo lo que necesitas para facturar de forma profesional, rápida y legal.</p>
         </div>
-
-        <div class="card">
-            <h3>📄 PDF automático</h3>
-            <p>Descarga inmediata en formato PDF profesional.</p>
-        </div>
-
-        <div class="card">
-            <h3>🇪🇸 Adaptado a España</h3>
-            <p>IVA, IRPF, formato y estructura compatibles con España.</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                <h3>Ultra rápido</h3>
+                <p>Genera una factura completa en menos de 30 segundos. Sin registro, sin esperas.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg></div>
+                <h3>PDF profesional</h3>
+                <p>Descarga inmediata en formato PDF con diseño limpio y profesional.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg></div>
+                <h3>Adaptado a España</h3>
+                <p>IVA, IRPF, formato y estructura 100% compatibles con la normativa española.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                <h3>Seguro y privado</h3>
+                <p>Tus datos no se almacenan. Procesamiento seguro en tiempo real.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                <h3>Siempre disponible</h3>
+                <p>Accede desde cualquier dispositivo, en cualquier momento. Sin instalación.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></div>
+                <h3>Personalizable</h3>
+                <p>Añade tu logo, colores y datos de empresa para un resultado profesional.</p>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
 <!-- HOW IT WORKS -->
-<div class="section" style="background:#fff;">
-    <h2>Cómo funciona</h2>
-    <p>1. Introduces los datos<br>2. Generas la factura<br>3. Descargas el PDF</p>
-</div>
+<section class="section section-alt">
+    <div class="container">
+        <div class="section-header">
+            <p class="section-label">Proceso</p>
+            <h2 class="section-title">Cómo funciona</h2>
+            <p class="section-desc">Tres pasos simples para tener tu factura lista.</p>
+        </div>
+        <div class="steps">
+            <div class="step">
+                <div class="step-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+                    <span class="step-num">01</span>
+                </div>
+                <h3>Introduce los datos</h3>
+                <p>Rellena los datos de tu empresa, cliente y conceptos de la factura.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 12h4"/><path d="M10 16h4"/></svg>
+                    <span class="step-num">02</span>
+                </div>
+                <h3>Genera la factura</h3>
+                <p>Nuestro sistema crea automáticamente una factura profesional y legal.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                    <span class="step-num">03</span>
+                </div>
+                <h3>Descarga el PDF</h3>
+                <p>Descarga tu factura al instante en formato PDF listo para enviar.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- PRICING -->
-<div class="section">
-    <h2>Precios</h2>
-
-    <div class="pricing">
-        <div class="price-box">
-            <h3>Gratis</h3>
-            <div class="price">0€</div>
-            <p>Facturas básicas</p>
-            <a class="btn" href="/create-invoice">Empezar</a>
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <p class="section-label">Precios</p>
+            <h2 class="section-title">Planes simples y transparentes</h2>
+            <p class="section-desc">Empieza gratis y mejora cuando lo necesites.</p>
         </div>
-
-        <div class="price-box">
-            <h3>Pro</h3>
-            <div class="price">9€/mes</div>
-            <p>Facturas ilimitadas + branding</p>
-            <a class="btn" href="/show-pro">Probar</a>
+        <div class="pricing-grid">
+            <div class="plan">
+                <h3 class="plan-name">Gratis</h3>
+                <p class="plan-desc">Perfecto para empezar a facturar</p>
+                <div class="plan-price">0€</div>
+                <ul class="plan-features">
+                    <li><svg class="check" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Facturas básicas ilimitadas</li>
+                    <li><svg class="check" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Descarga en PDF</li>
+                    <li><svg class="check" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> IVA e IRPF incluidos</li>
+                    <li><svg class="check" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Sin registro necesario</li>
+                </ul>
+                <a href="/create-invoice" class="btn btn-navy">Empezar gratis <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+            </div>
+            <div class="plan featured">
+                <div class="popular-badge">Más popular</div>
+                <h3 class="plan-name">Pro</h3>
+                <p class="plan-desc">Para autónomos y empresas que necesitan más</p>
+                <div class="plan-price">9€<span class="plan-period">/mes</span></div>
+                <ul class="plan-features">
+                    <li><svg class="check" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Todo lo del plan Gratis</li>
+                    <li><svg class="check" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Branding personalizado</li>
+                    <li><svg class="check" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Logo en las facturas</li>
+                    <li><svg class="check" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Plantillas premium</li>
+                    <li><svg class="check" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Soporte prioritario</li>
+                </ul>
+                <a href="/show-pro" class="btn btn-gold">Probar Pro <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
 <!-- FAQ -->
-<div class="section">
-    <h2>Preguntas frecuentes</h2>
-
-    <div class="faq">
-        <h3>¿Es legal en España?</h3>
-        <p>Sí, cumple con el formato estándar de facturación.</p>
-
-        <h3>¿Necesito registrarme?</h3>
-        <p>No, puedes empezar sin registro.</p>
-
-        <h3>¿Puedo usarlo como autónomo?</h3>
-        <p>Sí, está diseñado para autónomos y pymes.</p>
+<section class="section section-alt">
+    <div class="container">
+        <div class="section-header">
+            <p class="section-label">FAQ</p>
+            <h2 class="section-title">Preguntas frecuentes</h2>
+        </div>
+        <div class="faq-list">
+            <div class="faq-item">
+                <button class="faq-question">¿Es legal en España? <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div class="faq-answer"><div class="faq-answer-inner">Sí, nuestras facturas cumplen con el formato estándar de facturación exigido por la normativa española, incluyendo todos los campos obligatorios como NIF, base imponible, IVA e IRPF.</div></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">¿Necesito registrarme? <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div class="faq-answer"><div class="faq-answer-inner">No, puedes generar y descargar facturas sin necesidad de crear una cuenta. Si quieres funciones avanzadas como branding personalizado, puedes actualizar al plan Pro.</div></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">¿Puedo usarlo como autónomo? <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div class="faq-answer"><div class="faq-answer-inner">Por supuesto. Está diseñado especialmente para autónomos y pymes en España. Incluye campos para IRPF y todas las particularidades fiscales necesarias.</div></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">¿Almacenáis mis datos o facturas? <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div class="faq-answer"><div class="faq-answer-inner">No. Tus datos se procesan en tiempo real para generar el PDF y no se almacenan en ninguna base de datos. Tu privacidad es nuestra prioridad.</div></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">¿Puedo añadir mi logo a las facturas? <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+                <div class="faq-answer"><div class="faq-answer-inner">Sí, con el plan Pro puedes personalizar las facturas con tu logo, colores corporativos y datos de empresa.</div></div>
+            </div>
+        </div>
     </div>
-</div>
-
-
+</section>
 
 <!-- CTA -->
-<div class="section" style="background:#2563eb; color:white;">
-    <h2>Empieza ahora</h2>
-    <p>Genera tu primera factura en menos de 1 minuto</p>
-    <a href="/create-invoice" class="btn" style="background:white; color:#2563eb;">
-        Crear factura
-    </a>
-</div>
+<section class="cta-section">
+    <div class="container">
+        <h2>Empieza a facturar ahora</h2>
+        <p>Genera tu primera factura profesional en menos de 1 minuto. Gratis y sin registro.</p>
+        <a href="/create-invoice" class="btn btn-gold-lg">
+            Crear factura gratis
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+    </div>
+</section>
 
-<footer>
-    © 2026 Generador de Facturas
-    <br>
-
-    <a href="/crear-factura-online">Crear factura online</a>
-    <a href="/factura-autonomos-espana">Factura autónomos</a>
-
-    <a href="/como-hacer-factura-espana">Como hacer factura</a>
-    <a href="/generador-facturas-gratis">Generador factura gratis</a>
-
-    <a href="/programa-facturacion-gratis">Programa facturacion gratis</a>
-
-    <p>
-        Titular: Generador de Facturas<br>
-        Email: contacto@generadordefacturas.es<br>
-    </p>
-    <p style="font-size:12px;color:#666;">
-        Este sitio no utiliza cookies de seguimiento ni publicidad.
-    </p>
-    <a href="/politica-privacidad">Política de privacidad</a> |
-    <a href="/aviso-legal">Aviso legal</a>
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div>
+                <div class="logo" style="color: var(--fg); margin-bottom: 1rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--navy-accent);"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 12h4"/><path d="M10 16h4"/></svg>
+                    generadordefacturas.es
+                </div>
+                <p style="font-size:.85rem;color:var(--muted);line-height:1.6;">Generador de facturas online para autónomos y empresas en España.</p>
+            </div>
+            <div>
+                <h4>Enlaces</h4>
+                <ul class="footer-links">
+                    <li><a href="/crear-factura-online">Crear factura online</a></li>
+                    <li><a href="/factura-autonomos-espana">Factura autónomos</a></li>
+                    <li><a href="/generador-facturas-gratis">Generador factura gratis</a></li>
+                    <li><a href="/programa-facturacion-gratis">Programa facturación gratis</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Contacto</h4>
+                <p style="font-size:.85rem;color:var(--muted);">Email: contacto@generadordefacturas.es</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Generador de Facturas. Todos los derechos reservados.</p>
+            <div class="footer-legal">
+                <a href="/politica-privacidad">Política de privacidad</a>
+                <a href="aviso-legal">Aviso legal</a>
+            </div>
+        </div>
+        <p class="footer-note">Este sitio no utiliza cookies de seguimiento ni publicidad.</p>
+    </div>
 </footer>
+
+<script>
+    document.querySelectorAll('.faq-question').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const item = btn.parentElement;
+            const answer = item.querySelector('.faq-answer');
+            const isOpen = item.classList.contains('open');
+
+            document.querySelectorAll('.faq-item.open').forEach(openItem => {
+                openItem.classList.remove('open');
+                openItem.querySelector('.faq-answer').style.maxHeight = '0';
+            });
+
+            if (!isOpen) {
+                item.classList.add('open');
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
