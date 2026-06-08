@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <th:block th:replace="~{fragments/head :: defaultHead}"></th:block>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Conectar pagos | generadordefacturas.es</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    :root {
+      --navy-deep: hsl(222, 60%, 16%);
+      --navy-mid: hsl(213, 50%, 24%);
+      --gold: hsl(40, 70%, 50%);
+      --gold-hover: hsl(40, 70%, 45%);
+      --bg: hsl(220, 30%, 97%);
+      --fg: hsl(220, 40%, 13%);
+      --border: hsl(216, 25%, 87%);
+      --card: #fff;
+      --radius: 16px;
+      --font-heading: 'Libre Baskerville', serif;
+      --font-body: 'IBM Plex Sans', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    .wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 580px;
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 40px rgba(0,0,0,.08);
+    }
+
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--navy-deep);
+    }
+
+    p {
+      color: #5b6475;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: .5rem;
+      font-weight: 600;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: .95rem;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      padding: 1rem;
+      border-radius: 12px;
+      background: var(--gold);
+      color: var(--navy-deep);
+      font-weight: 700;
+      font-size: 1rem;
+      transition: .2s;
+      margin-top: 1rem;
+    }
+
+    button:hover {
+      background: var(--gold-hover);
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="card">
+
+    <h1>Conecta tus pagos</h1>
+
+    <p>
+      Para recibir pagos de tus clientes necesitamos conectar tu cuenta bancaria con Stripe.
+      Solo tarda unos minutos.
+    </p>
+
+    <form method="POST" action="/stripe/connect/onboard">
+
+      <input type="hidden" name="invoiceId" th:value="${invoiceId}">
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" required>
+      </div>
+
+      <div class="form-group">
+        <label>Nombre del negocio</label>
+        <input type="text" name="businessName" required>
+      </div>
+
+      <div class="form-group">
+        <label>País</label>
+
+        <select name="country">
+          <option value="ES">España</option>
+        </select>
+      </div>
+
+      <button type="submit">
+        Continuar con Stripe
+      </button>
+
+    </form>
+
+  </div>
+</div>
+<script>
+  const invoiceId = "[[${invoiceId}]]";
+</script>
+</body>
+</html>

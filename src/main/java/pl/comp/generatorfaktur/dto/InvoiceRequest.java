@@ -1,4 +1,4 @@
-package pl.comp.generatorfaktur.entities;
+package pl.comp.generatorfaktur.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;

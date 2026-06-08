@@ -1,9 +1,9 @@
-package pl.comp.generatorfaktur.controller;
+package pl.comp.generatorfaktur.controllers;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import pl.comp.generatorfaktur.entities.EmailUser;
+import pl.comp.generatorfaktur.entities.EmailUserEntity;
 import pl.comp.generatorfaktur.repositories.EmailRepository;
 
 import java.util.Map;
@@ -21,7 +21,7 @@ public class EmailController {
     public String saveEmail(@RequestBody Map<String, String> body) {
         System.out.println("Saving email...");
         String email = body.get("email");
-        emailRepository.save(new EmailUser(email));
+        emailRepository.save(new EmailUserEntity(email));
         System.out.println("Saving email: " + email);
 
         return "ok";

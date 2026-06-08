@@ -302,10 +302,19 @@
             <span>Descargar PDF</span>
           </button>
         </form>
+
+          <button onclick="generateLink()" type="submit"
+                  class="invoice-btn">
+            <span><i class="fa-solid"></i></span>
+            <span>Copiar enlace</span>
+          </button>
       </div>
     </div>
   </div>
 </div>
+<script>
+  const invoiceId = "[[${invoiceId}]]";
+</script>
 <script src="/script.js"></script>
 </body>
 </html>

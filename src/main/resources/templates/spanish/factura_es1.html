@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="fragments/head :: defaultHead"></th:block>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/styleTest.css">
+  <title>Factura</title>
+
+  <style>
+
+    /* ===== PAGE ===== */
+
+    body {
+      font-family: "Arial", sans-serif;
+      font-size: 12pt;
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 0;
+      min-height: 920px;
+      background: #282828;
+      color: #000;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      padding: 20mm;
+      margin: 80px auto 0;
+      position: relative;
+      background: #fff;
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    strong {
+      font-weight: 700;
+    }
+
+    /* ===== HEADER ===== */
+
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 30px;
+    }
+
+    .invoice-header .invoice-number {
+      font-size: 22pt;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-box {
+      width: 110px;
+      height: 110px;
+      border: 1px dashed #bbb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 10pt;
+      text-align: center;
+    }
+
+    /* ===== GRID SYSTEM (KLUCZ) ===== */
+
+    :root {
+      --c1: 44%;
+      --c2: 18.66%;
+      --c3: 18.66%;
+      --c4: 18.66%;
+    }
+
+    /* ===== PARTIES ===== */
+
+    .parties {
+      display: grid;
+      grid-template-columns: var(--c1) var(--c2) var(--c3) var(--c4);
+      margin: 20px 0 10px;
+    }
+
+    .party:first-child {
+      grid-column: 1 / 2;
+    }
+
+    .party:last-child {
+      grid-column: 2 / 5;
+    }
+
+    .party h3 {
+      font-size: 11pt;
+      font-weight: 700;
+      margin: 0 0 8px;
+    }
+
+    .party p {
+      font-size: 11pt;
+      color: #222;
+      margin: 2px 0;
+    }
+
+    .meta-date {
+      font-size: 10.5pt;
+      color: #555;
+      margin-bottom: 6px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #000;
+      margin: 24px 0;
+    }
+
+    /* ===== TABLE ===== */
+
+    .items {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .items thead th {
+      font-weight: 400;
+      color: #555;
+      font-size: 10.5pt;
+      padding: 10px 8px;
+      border-bottom: 1px solid #000;
+    }
+
+    .items tbody td {
+      padding: 14px 8px;
+      font-size: 11pt;
+      border-bottom: 1px solid #ddd;
+      vertical-align: top;
+    }
+
+    /* ===== COLUMN ALIGNMENT ===== */
+
+    .items thead th:nth-child(1),
+    .items tbody td:nth-child(1) {
+      text-align: left;
+    }
+
+    .items thead th:nth-child(2),
+    .items tbody td:nth-child(2) {
+      text-align: left;
+    }
+
+    .items thead th:nth-child(3),
+    .items tbody td:nth-child(3) {
+      text-align: center;
+    }
+
+    .items thead th:nth-child(4),
+    .items tbody td:nth-child(4) {
+      text-align: right;
+    }
+
+    /* ===== TOTALS ===== */
+
+    .totals-row td {
+      padding: 0;
+      border: none;
+    }
+
+    .totals-grid {
+      display: grid;
+      grid-template-columns: var(--c1) var(--c2) var(--c3) var(--c4);
+      margin-top: 8px;
+    }
+
+    .totals-block {
+      grid-column: 2 / 5;
+
+      display: grid;
+      grid-template-columns: 1fr auto;
+
+      row-gap: 10px;
+      padding-top: 16px;
+    }
+
+    .totals-block .label {
+      color: #222;
+      text-align: left;
+    }
+
+    .totals-block .value {
+      text-align: left;
+    }
+
+    .totals-block .sep {
+      grid-column: 1 / 3;
+      border-top: 1px solid #000;
+      margin: 4px 0;
+    }
+
+      .totals-block .total-label,
+      .totals-block .total-value {
+        font-weight: 700;
+        font-size: 12pt;
+      }
+
+    /* ===== PAYMENT ===== */
+
+    .payment-info {
+      margin-top: 36px;
+      padding: 18px 22px;
+      border: 1px solid #000;
+      border-radius: 10px;
+      background: #fafafa;
+    }
+
+    .payment-info h4 {
+      margin: 0 0 8px;
+      font-size: 11pt;
+      font-weight: 700;
+    }
+
+    .payment-info p {
+      font-size: 11pt;
+      margin: 3px 0;
+      color: #222;
+    }
+
+    /* ===== BUTTONS ===== */
+
+    .invoice-btns {
+      margin-top: 28px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .invoice-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 11pt;
+      font-weight: 600;
+      transition: opacity .2s;
+    }
+
+    .invoice-btn:hover {
+      opacity: 0.85;
+    }
+
+    .btn-print {
+      background: #0f1b3d;
+      color: #fff;
+    }
+
+    .btn-pdf {
+      background: #3b6fa0;
+      color: #fff;
+    }
+
+    /* ===== PRINT ===== */
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .page {
+        margin: 0;
+        box-shadow: none;
+        padding: 15mm;
+      }
+
+      .invoice-btns {
+        display: none;
+      }
+
+      @page {
+        size: A4;
+        margin: 0;
+      }
+    }
+
+    /* ===== MOBILE ===== */
+
+    @media (max-width: 800px) {
+
+      .page {
+        width: 100%;
+        padding: 20px;
+        margin-top: 20px;
+      }
+
+      .parties {
+        display: block;
+      }
+
+      .invoice-header {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .totals-block {
+        grid-column: 1 / 5;
+      }
+
+      .items thead {
+        display: none;
+      }
+
+      .items,
+      .items tbody,
+      .items tr,
+      .items td {
+        display: block;
+        width: 100%;
+      }
+
+      .items tbody td {
+        border: none;
+        padding: 4px 0;
+        text-align: left !important;
+      }
+
+      .items tbody tr {
+        border-bottom: 1px solid #ddd;
+        padding: 10px 0;
+      }
+    }
+
+  </style>
+</head>
+<body>
+<div class="print-area">
+  <div class="page">
+
+    <!-- HEADER -->
+    <div class="invoice-header">
+      <div>
+        <p class="invoice-number">
+          FACTURA Nº <span th:text="${invoiceNumber}"></span>/<span th:text="${#temporals.format(today, 'yyyy')}"></span>
+        </p>
+      </div>
+<!--      <div class="logo-box">Logo</div>-->
+    </div>
+
+    <!-- PARTIES + DATES -->
+    <div class="parties">
+      <div class="party">
+        <p class="meta-date">Fecha de emisión:
+          <br>
+          <strong th:text="${#temporals.format(today, 'dd/MM/yyyy')}"></strong></p>
+        <br>
+        <h3>Datos del emisor:</h3>
+        <p><strong th:text="${companyNameSeller}"></strong></p>
+        <p>Calle <span th:text="${addressSeller}"></span></p>
+        <p>NIF/NIE/CIF: <span th:text="${nipSeller}"></span></p>
+      </div>
+      <div class="party">
+        <p class="meta-date">Fecha del servicio:
+          <br>
+          <strong th:text="${#dates.format(completionOfServiceDate, 'dd/MM/yyyy')}"></strong></p>
+        <br>
+        <h3>Datos del cliente:</h3>
+        <p><strong th:text="${companyNameBuyer}"></strong></p>
+        <p>Calle <span th:text="${addressBuyer}"></span></p>
+        <p>NIF/NIE/CIF: <span th:text="${nipBuyer}"></span></p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <table class="items">
+
+      <colgroup>
+        <col style="width:44%">
+        <col style="width:18.66%">
+        <col style="width:18.66%">
+        <col style="width:18.66%">
+      </colgroup>
+
+      <thead>
+      <tr>
+        <th>Concepto</th>
+        <th class="num">Precio</th>
+        <th class="num">Cantidad</th>
+        <th class="num">Importe</th>
+      </tr>
+      </thead>
+
+      <tbody id="items-body">
+      <tr th:each="item, iterStat : ${items}">
+        <td th:text="${item.description}"></td>
+
+        <td class="num"
+            th:text="${#numbers.formatDecimal(item.netPrice, 1, 2, 'POINT')} + ' €'">
+        </td>
+
+        <td class="num"
+            th:text="${item.amount}">
+        </td>
+
+        <td class="num"
+            th:text="${#numbers.formatDecimal(item.netPrice * item.amount, 1, 2, 'POINT')} + ' €'">
+        </td>
+      </tr>
+      </tbody>
+
+      <tfoot>
+      <tr class="totals-row">
+        <td colspan="4">
+
+          <div class="totals-grid">
+
+            <div class="totals-block">
+
+              <div class="label">Subtotal</div>
+              <div class="value">
+                <span th:text="${#strings.replace(netPrice, ',', '.')}"></span> €
+              </div>
+
+              <div class="label">
+                IVA (<span th:text="${#numbers.formatDecimal((stawkaVAT * 100), 0, 0, 'POINT')} + '%'"></span>)
+              </div>
+
+              <div class="value">
+                <span th:text="${#strings.replace(vatValue, ',', '.')}"></span> €
+              </div>
+
+              <div class="label">
+                IRPF
+                (-<span th:if="${applyIRPF}"
+                        th:text="${#numbers.formatDecimal(irpfRate, 0, 0, 'POINT')} + '%'">
+              </span>)
+              </div>
+
+              <div class="value">
+              <span th:if="${applyIRPF}">
+                <span th:text="${#numbers.formatDecimal(irpfValue, 1, 2, 'POINT')}"></span> €
+              </span>
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="label total-label">
+                Total
+              </div>
+
+              <div class="value total-value">
+                <span th:text="${#strings.replace(grossPrice, ',', '.')}"></span> €
+              </div>
+
+            </div>
+
+          </div>
+
+        </td>
+      </tr>
+      </tfoot>
+
+    </table>
+
+    <!-- PAYMENT INFO -->
+    <div class="payment-info">
+      <h4>Información de pago</h4>
+      <p>Pago por transferencia bancaria a la cuenta (IBAN): ES<span th:text="${bankAccountNumber}"></span></p>
+      <p>SWIFT: <span th:if="${swift != null and !#strings.isEmpty(swift)}"
+                      th:text="${swift}"></span></p>
+      <p>Fecha límite de pago: <span th:text="${#dates.format(paymentDate, 'dd/MM/yyyy')}"></span></p>
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="invoice-btns">
+      <button class="invoice-btn btn-print" onclick="printInvoice()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+        Imprimir
+      </button>
+
+      <form action="/generate-invoice" method="get">
+      <button class="invoice-btn btn-pdf" type="submit">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Descargar PDF
+      </button>
+      </form>
+
+      <button onclick="generateLink()" type="button"
+              class="invoice-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <span><i class="fa-solid"></i></span>
+        <span>Copiar enlace</span>
+      </button>
+
+      <button type="button" onclick="shareInvoice()" class="invoice-btn">
+        Check account
+      </button>
+
+      <script>
+        console.log("JS LOADED")
+        function shareInvoice() {
+          console.log("CLICK OK");
+
+          fetch(`/stripe/invoice/share?invoiceId=${invoiceId}`)
+                  .then(res => res.text())
+                  .then(url => {
+                    console.log("REDIRECT:", url);
+                    window.location.href = url;
+                  })
+                  .catch(err => {
+                    console.error("ERROR:", err);
+                    alert("Error generating link");
+                  });
+        }
+      </script>
+    </div>
+
+  </div>
+</div>
+<script th:inline="javascript">
+  const invoiceId = [[${invoiceId}]];
+</script>
+<script src="/script.js"></script>
+</body>
+</html>

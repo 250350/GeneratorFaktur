@@ -1,4 +1,4 @@
-package pl.comp.generatorfaktur.controller;
+package pl.comp.generatorfaktur.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

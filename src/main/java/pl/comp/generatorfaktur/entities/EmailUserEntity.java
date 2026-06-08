@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 
 @Entity
-public class EmailUser {
+public class EmailUserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,9 +16,9 @@ public class EmailUser {
     @Getter
     private String email;
 
-    public EmailUser() {}
+    public EmailUserEntity() {}
 
-    public EmailUser(String email) {
+    public EmailUserEntity(String email) {
         this.email = email;
     }
 

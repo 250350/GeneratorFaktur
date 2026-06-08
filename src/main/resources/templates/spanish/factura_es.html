@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Factura</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 13px;
+      color: #1a1a2e;
+      background: #e8ecf1;
+      line-height: 1.5;
+    }
+
+    .nowrap {
+      white-space: nowrap;
+    }
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 40px auto;
+      padding: 50px 55px;
+      background: #fff;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      position: relative;
+    }
+
+    /* ===== HEADER ===== */
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 40px;
+      padding-bottom: 30px;
+      border-bottom: 2px solid #0f1b3d;
+    }
+
+    .invoice-number h1 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .invoice-number .number {
+      font-size: 22px;
+      font-weight: 700;
+      color: #0f1b3d;
+    }
+
+    .invoice-logo {
+      text-align: right;
+    }
+
+    .invoice-logo .company-name {
+      font-size: 28px;
+      font-weight: 700;
+      color: #0f1b3d;
+    }
+
+    /* ===== DATES ===== */
+    .dates-row {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 30px;
+      padding: 16px 20px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border-left: 3px solid #3b6fa0;
+    }
+
+    .date-block label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .date-block span {
+      font-size: 14px;
+      font-weight: 500;
+      color: #1a1a2e;
+    }
+
+    /* ===== PARTIES ===== */
+    .parties {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 35px;
+    }
+
+    .party {
+      flex: 1;
+      padding: 20px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+    }
+
+    .party h3 {
+      font-size: 11px;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .party .name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #0f1b3d;
+      margin-bottom: 4px;
+    }
+
+    .party p {
+      font-size: 13px;
+      color: #475569;
+      line-height: 1.6;
+    }
+
+    /* ===== ITEMS TABLE ===== */
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 0;
+    }
+
+    .items-table thead th {
+      background: #0f1b3d;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 12px 14px;
+      text-align: left;
+    }
+
+    .items-table thead th:first-child {
+      border-radius: 8px 0 0 0;
+    }
+
+    .items-table thead th:last-child {
+      border-radius: 0 8px 0 0;
+      text-align: right;
+    }
+
+    .items-table thead th.center { text-align: center; }
+    .items-table thead th.right { text-align: right; }
+
+    .items-table tbody td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 13px;
+      color: #334155;
+    }
+
+    .items-table tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    .items-table tbody td.center { text-align: center; }
+    .items-table tbody td.right { text-align: right; font-variant-numeric: tabular-nums; }
+    .items-table tbody td.num { text-align: center; font-variant-numeric: tabular-nums; }
+
+    /* ===== TOTALS ===== */
+    .totals-section {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 0;
+    }
+
+    .totals-table {
+      width: 280px;
+      border-collapse: collapse;
+    }
+
+    .totals-table tr td {
+      padding: 8px 14px;
+      font-size: 13px;
+      color: #475569;
+    }
+
+    .totals-table tr td:last-child {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+      color: #1a1a2e;
+    }
+
+    .totals-table tr.subtotal td {
+      border-top: 1px solid #e2e8f0;
+      padding-top: 14px;
+    }
+
+    .totals-table tr.total td {
+      border-top: 2px solid #0f1b3d;
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f1b3d;
+      padding-top: 14px;
+      padding-bottom: 14px;
+    }
+
+    /* ===== PAYMENT ===== */
+    .payment-section {
+      margin-top: 40px;
+      padding: 20px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border-left: 3px solid #3b6fa0;
+    }
+
+    .payment-section h3 {
+      font-size: 11px;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .payment-section p {
+      font-size: 13px;
+      color: #475569;
+      line-height: 1.7;
+    }
+
+    .payment-section strong {
+      color: #1a1a2e;
+    }
+
+    /* ===== SIGNATURES ===== */
+    .signatures {
+      display: flex;
+      gap: 40px;
+      margin-top: 50px;
+    }
+
+    .signature-box {
+      flex: 1;
+      height: 120px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+      font-size: 12px;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    /* ===== BUTTONS ===== */
+    .invoice-btns {
+      margin: 24px auto;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      max-width: 210mm;
+    }
+
+    .invoice-btn {
+      padding: 10px 24px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-print {
+      background: #0f1b3d;
+      color: #fff;
+    }
+
+    .btn-print:hover { background: #1e3a5f; }
+
+    .btn-pdf {
+      background: #3b6fa0;
+      color: #fff;
+    }
+
+    .btn-pdf:hover { background: #2d5a8a; }
+
+    /* ===== PRINT ===== */
+    @media print {
+      body { background: #fff; }
+      .page {
+        margin: 0;
+        padding: 15mm 20mm;
+        box-shadow: none;
+        min-height: auto;
+      }
+      .invoice-btns { display: none; }
+    }
+
+    @media (max-width: 800px) {
+      .page { padding: 30px 24px; margin: 0; }
+      .parties { flex-direction: column; gap: 16px; }
+      .items-table { font-size: 11px; }
+      .items-table thead th, .items-table tbody td { padding: 8px 6px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page print-area">
+
+  <!-- HEADER -->
+  <div class="invoice-header">
+    <div class="invoice-number">
+      <h1>Número de factura</h1>
+      <div class="number">F-<span id="factura-serie"></span>/<span id="factura-numero"></span></div>
+    </div>
+    <div class="invoice-logo">
+      <div class="company-name" id="emisor-nombre-header"></div>
+    </div>
+  </div>
+
+  <!-- DATES -->
+  <div class="dates-row">
+    <div class="date-block">
+      <label>Fecha de emisión</label>
+      <span id="fecha-emision"></span>
+    </div>
+    <div class="date-block">
+      <label>Fecha del servicio</label>
+      <span id="fecha-servicio"></span>
+    </div>
+  </div>
+
+  <!-- PARTIES -->
+  <div class="parties">
+    <div class="party">
+      <h3>De (Emisor)</h3>
+      <p class="name" id="emisor-nombre"></p>
+      <p id="emisor-direccion"></p>
+      <p id="emisor-ciudad"></p>
+      <p><strong>NIF/NIE/CIF:</strong> <span id="emisor-nif"></span></p>
+    </div>
+    <div class="party">
+      <h3>Para (Cliente)</h3>
+      <p class="name" id="cliente-nombre"></p>
+      <p id="cliente-direccion"></p>
+      <p id="cliente-ciudad"></p>
+      <p><strong>NIF/NIE/CIF:</strong> <span id="cliente-nif"></span></p>
+    </div>
+  </div>
+
+  <!-- ITEMS TABLE -->
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width:40px">Nº</th>
+        <th>Concepto</th>
+        <th class="center" style="width:80px">Cantidad</th>
+        <th class="right" style="width:110px">Precio unit.</th>
+        <th class="right" style="width:110px">Base imp.</th>
+        <th class="center" style="width:60px">IVA</th>
+        <th class="right" style="width:90px">Imp. IVA</th>
+        <th class="center" style="width:60px">IRPF</th>
+        <th class="right" style="width:90px">Imp. IRPF</th>
+        <th class="right" style="width:100px">Total</th>
+      </tr>
+    </thead>
+    <tbody id="items-body">
+      <!-- Rows injected by Thymeleaf or JS -->
+    </tbody>
+  </table>
+
+  <!-- TOTALS -->
+  <div class="totals-section">
+    <table class="totals-table">
+      <tr class="subtotal">
+        <td>Subtotal</td>
+        <td id="subtotal"></td>
+      </tr>
+      <tr>
+        <td>IVA</td>
+        <td id="total-iva"></td>
+      </tr>
+      <tr>
+        <td>IRPF</td>
+        <td id="total-irpf"></td>
+      </tr>
+      <tr class="total">
+        <td>Total a pagar</td>
+        <td id="total-pagar"></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- PAYMENT INFO -->
+  <div class="payment-section">
+    <h3>Información de pago</h3>
+    <p>Pago por transferencia bancaria a la cuenta (IBAN): <strong>ES<span id="iban"></span></strong></p>
+    <p>SWIFT: <strong id="swift"></strong></p>
+    <p>Fecha límite de pago: <strong id="fecha-limite"></strong></p>
+  </div>
+
+  <!-- SIGNATURES -->
+  <div class="signatures">
+    <div class="signature-box">Firma del emisor</div>
+    <div class="signature-box">Firma del cliente</div>
+  </div>
+
+</div>
+
+<!-- ACTION BUTTONS -->
+<div class="invoice-btns">
+  <button class="invoice-btn btn-print" onclick="window.print()">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Imprimir
+  </button>
+  <button class="invoice-btn btn-pdf" onclick="window.print()">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+    Descargar PDF
+  </button>
+</div>
+
+<script>
+  // Demo data — replace with Thymeleaf bindings or JS logic
+  const data = {
+    serie: '0001',
+    numero: '2023',
+    fechaEmision: '23/03/2023',
+    fechaServicio: '23/03/2023',
+    emisor: { nombre: 'Marta Pérez', direccion: 'Calle Ordoño 15', ciudad: '24001, León', nif: '36544443H' },
+    cliente: { nombre: 'Laura Sánchez', direccion: 'Calle Ercilla 2', ciudad: '28005, Madrid', nif: '36544443H' },
+    items: [
+      { concepto: 'Servicios de marketing', cantidad: 1, precio: 96.00, iva: 21, irpf: -7 }
+    ],
+    iban: '12 3456 7890 1234 5678',
+    swift: 'ABCDESMMXXX',
+    fechaLimite: '23/04/2023'
+  };
+
+  // Populate fields
+  document.getElementById('factura-serie').textContent = data.serie;
+  document.getElementById('factura-numero').textContent = data.numero;
+  document.getElementById('fecha-emision').textContent = data.fechaEmision;
+  document.getElementById('fecha-servicio').textContent = data.fechaServicio;
+  document.getElementById('emisor-nombre-header').textContent = data.emisor.nombre;
+  document.getElementById('emisor-nombre').textContent = data.emisor.nombre;
+  document.getElementById('emisor-direccion').textContent = data.emisor.direccion;
+  document.getElementById('emisor-ciudad').textContent = data.emisor.ciudad;
+  document.getElementById('emisor-nif').textContent = data.emisor.nif;
+  document.getElementById('cliente-nombre').textContent = data.cliente.nombre;
+  document.getElementById('cliente-direccion').textContent = data.cliente.direccion;
+  document.getElementById('cliente-ciudad').textContent = data.cliente.ciudad;
+  document.getElementById('cliente-nif').textContent = data.cliente.nif;
+  document.getElementById('iban').textContent = data.iban;
+  document.getElementById('swift').textContent = data.swift;
+  document.getElementById('fecha-limite').textContent = data.fechaLimite;
+
+  // Build items
+  const tbody = document.getElementById('items-body');
+  let subtotal = 0, totalIva = 0, totalIrpf = 0;
+
+  data.items.forEach((item, i) => {
+    const base = item.cantidad * item.precio;
+    const iva = base * (item.iva / 100);
+    const irpf = base * (item.irpf / 100);
+    const total = base + iva + irpf;
+    subtotal += base;
+    totalIva += iva;
+    totalIrpf += irpf;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="num">${i + 1}</td>
+      <td>${item.concepto}</td>
+      <td class="center">${item.cantidad}</td>
+      <td class="right">${item.precio.toFixed(2)} €</td>
+      <td class="right">${base.toFixed(2)} €</td>
+      <td class="center">${item.iva}%</td>
+      <td class="right">${iva.toFixed(2)} €</td>
+      <td class="center">${item.irpf}%</td>
+      <td class="right">${irpf.toFixed(2)} €</td>
+      <td class="right"><strong>${total.toFixed(2)} €</strong></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const grandTotal = subtotal + totalIva + totalIrpf;
+  document.getElementById('subtotal').textContent = subtotal.toFixed(2) + ' €';
+  document.getElementById('total-iva').textContent = totalIva.toFixed(2) + ' €';
+  document.getElementById('total-irpf').textContent = totalIrpf.toFixed(2) + ' €';
+  document.getElementById('total-pagar').textContent = grandTotal.toFixed(2) + ' €';
+</script>
+
+</body>
+</html>

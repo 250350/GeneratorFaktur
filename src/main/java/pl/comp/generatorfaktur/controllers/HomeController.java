@@ -1,5 +1,6 @@
-    package pl.comp.generatorfaktur.controller;
+    package pl.comp.generatorfaktur.controllers;
 
+    import jakarta.servlet.http.HttpServletResponse;
     import jakarta.servlet.http.HttpSession;
     import jakarta.validation.Valid;
     import org.springframework.http.MediaType;
@@ -10,9 +11,17 @@
     import org.springframework.web.bind.annotation.*;
     import org.thymeleaf.TemplateEngine;
     import org.thymeleaf.context.Context;
-    import pl.comp.generatorfaktur.entities.InvoiceItem;
-    import pl.comp.generatorfaktur.entities.InvoiceRequest;
+    import pl.comp.generatorfaktur.dto.InvoiceItem;
+    import pl.comp.generatorfaktur.dto.InvoiceRequest;
+    import pl.comp.generatorfaktur.entities.InvoiceEntity;
+    import pl.comp.generatorfaktur.entities.InvoiceItemEntity;
+    import pl.comp.generatorfaktur.entities.SellerEntity;
+    import pl.comp.generatorfaktur.mapper.InvoiceMapper;
     import pl.comp.generatorfaktur.model.nifVerification;
+    import pl.comp.generatorfaktur.repositories.InvoiceRepository;
+    import pl.comp.generatorfaktur.repositories.SellerRepository;
+    import pl.comp.generatorfaktur.services.InvoiceService;
+    import pl.comp.generatorfaktur.services.StripeService;
     import tools.jackson.databind.ObjectMapper;
 
     import java.io.InputStream;
@@ -30,13 +39,47 @@
     @Controller
     public class HomeController {
         private final TemplateEngine templateEngine;
+        private final InvoiceService invoiceService;
+        private final StripeService stripeService;
+        private final InvoiceRepository invoiceRepository;
+        private final SellerRepository sellerRepository;
     //    private double vat;
     //    private double vatValue;
     //    private double grossPrice;
     //    private double netPrice;
     
-        public HomeController(TemplateEngine templateEngine) {
+        public HomeController(TemplateEngine templateEngine, InvoiceService invoiceService, StripeService stripeService, InvoiceRepository invoiceRepository, SellerRepository sellerRepository) {
             this.templateEngine = templateEngine;
+            this.invoiceService = invoiceService;
+            this.stripeService = stripeService;
+            this.invoiceRepository = invoiceRepository;
+            this.sellerRepository = sellerRepository;
+        }
+
+        @GetMapping("/api/payments/create-checkout/{invoiceId}")
+        public void createCheckout(@PathVariable String invoiceId,
+                                   HttpServletResponse response) throws Exception {
+
+            String url = stripeService.createCheckout(invoiceId);
+
+            response.sendRedirect(url);
+        }
+
+        @GetMapping("/stripe/invoice/share")
+        public String share(@RequestParam String invoiceId) {
+
+            InvoiceEntity invoice = invoiceRepository.findById(invoiceId)
+                    .orElseThrow();
+
+            SellerEntity seller = invoice.getSeller();
+
+            // CASE 1: NIE MA STRIPE → onboarding
+            if (seller == null || seller.getStripeAccountId() == null) {
+                return "redirect:/stripe/connect?invoiceId=" + invoiceId;
+            }
+
+            // CASE 2: MA STRIPE → public invoice
+            return "redirect:/f/" + invoiceId;
         }
     
         @GetMapping("/ping")
@@ -63,6 +106,60 @@
         @RequestMapping("/show-pro")
         public String pro() {
             return "spanish/pro";
+        }
+
+        @GetMapping("/f/{invoiceId}")
+        public String publicInvoice(@PathVariable String invoiceId,
+                                    Model model) {
+
+            InvoiceEntity invoice = invoiceRepository
+                    .findById(invoiceId)
+                    .orElseThrow();
+
+            SellerEntity seller = invoice.getSeller();
+
+
+            double totalNet = 0;
+            for (InvoiceItemEntity item : invoice.getItems()) {
+                double itemTotal = item.getNetPrice() * item.getAmount();
+                totalNet += itemTotal;
+            }
+
+            double vat = invoice.getVatRate() / 100.0;
+            double vatValue = totalNet * vat;
+
+            double irpfRate = invoice.getIrpfRate() / 100.0;
+            double irpfValue = totalNet * irpfRate;
+
+            double grossPrice = totalNet + vatValue - irpfValue;
+
+            double netPrice = totalNet;
+
+            String bankAccountNumber = invoice.getBankAccountNumber();
+
+            model.addAttribute("invoiceId", invoiceId);
+            model.addAttribute("companyNameSeller", invoice.getCompanyNameSeller());
+            model.addAttribute("addressSeller", invoice.getAddressSeller());
+            model.addAttribute("postalCodeAndCitySeller", invoice.getPostalCodeAndCitySeller());
+            model.addAttribute("nipSeller", invoice.getNipSeller());
+            model.addAttribute("companyNameBuyer", invoice.getCompanyNameBuyer());
+            model.addAttribute("addressBuyer", invoice.getAddressBuyer());
+            model.addAttribute("postalCodeAndCityBuyer", invoice.getPostalCodeAndCityBuyer());
+            model.addAttribute("nipBuyer", invoice.getNipBuyer());
+            model.addAttribute("items", invoice.getItems());
+            model.addAttribute("netPrice", String.format("%.2f", netPrice));
+            model.addAttribute("vatValue", String.format("%.2f", vatValue));
+            model.addAttribute("grossPrice", String.format("%.2f", grossPrice));
+            model.addAttribute("stawkaVAT", invoice.getVatRate());
+            model.addAttribute("irpfRate", irpfRate);
+            model.addAttribute("irpfValue", irpfValue);
+            model.addAttribute("applyIRPF", invoice.isApplyIRPF());
+            model.addAttribute("completionOfServiceDate", invoice.getCompletionOfServiceDate());
+            model.addAttribute("today", LocalDate.now());
+            model.addAttribute("invoiceNumber", invoice.getInvoiceNumber());
+            model.addAttribute("paymentDate", invoice.getPaymentDate());
+            model.addAttribute("bankAccountNumber", formatBankAccountNumber(bankAccountNumber));
+            return "spanish/public-invoice";
         }
     
         @GetMapping("/create-invoice")
@@ -115,7 +212,12 @@
             double irpfValue = totalNet * irpfRate;
 
             double grossPrice = totalNet + vatValue - irpfValue;
-    
+
+            InvoiceEntity entity = InvoiceMapper.toEntity(invoiceRequest);
+
+            InvoiceEntity saved = invoiceService.save(entity);
+
+
             session.setAttribute("companyNameSeller", invoiceRequest.getCompanyNameSeller());
             session.setAttribute("addressSeller", invoiceRequest.getAddressSeller());
             session.setAttribute("postalCodeAndCitySeller", invoiceRequest.getPostalCodeAndCitySeller());
@@ -137,6 +239,7 @@
             session.setAttribute("invoiceNumber", invoiceRequest.getInvoiceNumber());
             session.setAttribute("paymentDate", invoiceRequest.getPaymentDate());
             session.setAttribute("bankAccountNumber", formatBankAccountNumber(invoiceRequest.getBankAccountNumber()));
+            session.setAttribute("invoiceId", saved.getId());
             if (invoiceRequest.getSwift() != null) {
                 session.setAttribute("swift", invoiceRequest.getSwift());
                 model.addAttribute("swift", invoiceRequest.getSwift());
@@ -163,8 +266,9 @@
             model.addAttribute("invoiceNumber", invoiceRequest.getInvoiceNumber());
             model.addAttribute("paymentDate", invoiceRequest.getPaymentDate());
             model.addAttribute("bankAccountNumber", formatBankAccountNumber(invoiceRequest.getBankAccountNumber()));
+            model.addAttribute("invoiceId", saved.getId());
     
-            return "spanish/faktura_es";
+            return "spanish/factura_es1";
         }
     
     @GetMapping("/generate-invoice")
@@ -191,6 +295,7 @@
         List<InvoiceItem> items = (List<InvoiceItem>) session.getAttribute("items");
         Double netPriceObj = (Double) session.getAttribute("netPrice");
         double netPrice = netPriceObj != null ? netPriceObj : 0.0;
+
         Double vatObj = (Double) session.getAttribute("stawkaVAT");
         double stawkaVAT = vatObj != null ? vatObj : 0.0;
 
@@ -240,7 +345,7 @@
             context.setVariable("swift", swift);
         }
     
-        String html = templateEngine.process("spanish/faktura-pdf_es", context);
+        String html = templateEngine.process("spanish/factura-pdf_es", context);
     
         byte[] pdf = generatePdfWithPuppeteer(html);
     
